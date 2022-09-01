@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "720887578655",
+    "project_id": "apartforest-ba8b0",
+    "storage_bucket": "apartforest-ba8b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720887578655:android:2785c7a795605eea0e152a",
+        "android_client_info": {
+          "package_name": "com.afore.apart_forest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720887578655-jspt6om3rjf3qmuk6nl42146ugjdnpmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByWy82lM7q67UOIi8oSQorUCA9A7yIRwM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720887578655-jspt6om3rjf3qmuk6nl42146ugjdnpmp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
