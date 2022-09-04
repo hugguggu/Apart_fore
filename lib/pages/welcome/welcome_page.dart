@@ -98,7 +98,7 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        FlatButton(
+                        MaterialButton(
                           onPressed: () {
                             if (index < 3) {
                               _pageViewController.animateToPage(index + 1,

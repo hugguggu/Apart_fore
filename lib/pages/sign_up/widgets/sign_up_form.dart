@@ -89,7 +89,7 @@ class SignUpForm extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    FlatButton(
+                    MaterialButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();
                         context

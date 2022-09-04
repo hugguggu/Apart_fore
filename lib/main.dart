@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import 'package:get/get.dart';
 
 // 1. 액세스토큰 리플레시토큰 유저아이디 넘겨주기 << http 통신으로
 // 2. 중복확인 버튼을 누르면 닉네임 넘겨주기
@@ -20,6 +21,10 @@ import 'dart:async';
 // http://61.77.114.199:8680/
 // POST : http://61.77.114.199:8680/auth/signin/kakao
 // accessToken / refreshToken / providerUserId << json 형태로
+
+// 카카오톡 연동 -> 닉네임 여부 -> 닉네임 등록안되있으면 회원가입 절차 진행, 아니면 메인페이지(게시판)
+// 닉네임 유효성검사 필요, 최수 2자, 공백 안되고 특수문자안되고
+// 중복하기 일단 빼고 가입하기하면 내부적으로 확인되게
 // 테스트
 
 Future<void> main() async {
@@ -39,7 +44,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Apart Private community',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -55,6 +60,7 @@ String g_accessToken;
 String g_refreshToken;
 String g_providerUserId;
 String g_cookie;
+bool g_isUser;
 bool g_setName;
 bool g_duplicateName;
 
@@ -85,7 +91,7 @@ Future<http.Response> signOut() async {
   return response;
 }
 
-void getUsers() async {
+Future<http.Response> getUsers() async {
   var url = Uri.parse(
     'http://61.77.114.199:8680/users',
   );
@@ -95,6 +101,15 @@ void getUsers() async {
   );
   print('Response status: ${response.statusCode}');
   print('Response body: ${response.body}');
+
+  // int strNickname = response.body['nickname'] as int;
+  //
+  //
+  // if(response.body['nickname'] != null){
+  //   g_isUser = true;
+  // }else g_isUser = false;
+
+  return response;
 }
 
 Future<http.Response> postSetApart(String kaptCode) async {
@@ -343,6 +358,12 @@ class StartPage extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     if(isKakaoLogin){ // 카카오톡 - 아숲 연동 완료
                       postSignin();
+                      getUsers();
+                      // if(getUsers()){
+                      //
+                      // }else{
+                      //
+                      // }
                       return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
                     }else{
                     }

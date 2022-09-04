@@ -59,7 +59,7 @@ class StartPage extends StatelessWidget {
                   ]),
                 ),
               ),
-              // FlatButton(
+              // MaterialButton(
               //   onPressed: () {
               //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
               //       return SignInPage();

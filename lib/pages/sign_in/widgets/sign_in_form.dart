@@ -107,7 +107,7 @@ class SignInForm extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    FlatButton(
+                    MaterialButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();
                         context
@@ -176,6 +176,7 @@ class SignInForm extends StatelessWidget {
   }
 
   void showSnackBar(BuildContext context, Widget snackBar) {
-    Scaffold.of(context).showSnackBar(snackBar);
+    // Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

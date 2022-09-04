@@ -92,9 +92,10 @@ class SignUpAforeForm extends StatelessWidget {
                       //     ? null
                       //     : "Invalid Email",
                     ),
-                    FlatButton (
+                    MaterialButton (
                         onPressed: (){
                           checkNickname(nickname);
+                          // main.getUsers();
                           FocusScope.of(context).unfocus();
                         },
                       color: Color(0xff347af0),
@@ -121,16 +122,24 @@ class SignUpAforeForm extends StatelessWidget {
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.add_business_rounded),
                         labelText: '주거 아파트',
                         hintText: '아파트명을 입력하세요.',
-                        suffixIcon: Icon(Icons.search), //검색 아이콘 추가
+                        suffixIcon: IconButton (
+                          icon: Icon(Icons.search),
+                          onPressed: () {
+                            // main.postSearchApart(searchApt);
+                          },
+                        ), //검색 아이콘 추가
                         contentPadding: EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 5),
                       ),
                       autocorrect: false,
                       autofocus: false,
-                      onChanged: (value) => searchApt = value,
+                      onChanged: (value) => {
+                        searchApt = value,
+                        main.postSearchApart(searchApt),
+                      }
                       // onChanged: (value) {
                       //   searchApt = value.toString();
                       // },
@@ -139,7 +148,7 @@ class SignUpAforeForm extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    FlatButton(
+                    MaterialButton(
                       onPressed: () {
                         main.postSearchApart(searchApt);
                         // main.postSetApart("A13579501");
