@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -18,7 +20,16 @@ class _BoardScreenState extends State<BoardScreen> {
       ),
       body: Center(
         child: Column(
-          children: makeArticleList(),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: makeArticleList(),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -35,7 +46,7 @@ class _BoardScreenState extends State<BoardScreen> {
 List<Widget> makeArticleList() {
   List<Widget> res = [];
 
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 20; i++) {
     res.add(
       Container(
         child: Column(
@@ -49,38 +60,70 @@ List<Widget> makeArticleList() {
                 //   );
                 // }));
               },
-              child: Container(
-                padding: EdgeInsets.only(right: 24),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '가나다라',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Icon(
-                    Icons.visibility,
-                    size: 12,
+                  Container(
+                    padding: EdgeInsets.only(right: 24),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '가나다라',
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
+                      ),
+                    ),
                   ),
-                  Text('12'),
-                  Icon(
-                    Icons.comment,
-                    size: 12,
+                  Container(
+                    padding: EdgeInsets.only(right: 24),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Preview_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ\nsdfsf',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
                   ),
-                  Text('12'),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('Writer'),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Icon(
+                                Icons.visibility,
+                                size: 12,
+                              ),
+                              Text('12'),
+                              Icon(
+                                Icons.comment,
+                                size: 12,
+                              ),
+                              Text('12'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 1.0,
+                    width: 500.0,
+                    color: Colors.blueAccent,
+                  ),
                 ],
               ),
-            ),
-            Container(
-              height: 1.0,
-              width: 500.0,
-              color: Colors.white,
             ),
           ],
         ),

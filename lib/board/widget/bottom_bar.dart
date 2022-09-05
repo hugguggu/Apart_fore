@@ -5,13 +5,13 @@ class Bottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: Colors.blueAccent,
       child: Container(
         height: 50,
         child: TabBar(
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white60,
-          indicatorColor: Colors.transparent,
+          indicatorColor: Colors.white,
           tabs: <Widget>[
             Tab(
               icon: Icon(

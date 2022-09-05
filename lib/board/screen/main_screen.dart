@@ -17,10 +17,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bbongflix',
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.black,
+        brightness: Brightness.light,
+        primaryColor: Colors.blueAccent,
         accentColor: Colors.orangeAccent,
         focusColor: Colors.orangeAccent,
       ),
