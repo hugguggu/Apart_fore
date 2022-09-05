@@ -4,6 +4,7 @@ import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
 import 'package:apart_forest/pages/sign_up_afore/sign_up_afore_page.dart';
 import 'package:apart_forest/pages/start/start_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +14,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:get/get.dart';
+
+
 
 // 1. 액세스토큰 리플레시토큰 유저아이디 넘겨주기 << http 통신으로
 // 2. 중복확인 버튼을 누르면 닉네임 넘겨주기
@@ -133,7 +136,29 @@ Future<http.Response> postSetApart(String kaptCode) async {
   return response;
 }
 
-Future<http.Response> postSearchApart(String search) async {
+//
+// Future<http.Response> postSearchApart(String search) async {
+//   var url = Uri.parse(
+//     'http://61.77.114.199:8680/apts/get-list',
+//   );
+//
+//   Map data = {
+//     'keyword': search,
+//   };
+//   //encode Map to JSON
+//   var body = json.encode(data);
+//
+//   var response = await http.post(url,
+//       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
+//       body: body
+//   );
+//   print("${response.headers}");
+//   print("${response.statusCode}");
+//   print("${response.body}");
+//   return response;
+// }
+
+Future<List<Apart>> postSearchApart(String search) async {
   var url = Uri.parse(
     'http://61.77.114.199:8680/apts/get-list',
   );
@@ -151,7 +176,36 @@ Future<http.Response> postSearchApart(String search) async {
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
-  return response;
+
+  return parseApart(response.body);
+}
+
+List<Apart> parseApart(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Apart>((json) => Apart.fromJson(json)).toList();
+}
+
+class Apart {
+  final String kaptCode;
+  final String kaptName;
+  final String bjdCode;
+  final String as1;
+  final String as2;
+  final String as3;
+
+  Apart({this.kaptCode, this.kaptName, this.bjdCode, this.as1, this.as2, this.as3});
+
+  factory Apart.fromJson(Map<String, dynamic> json) {
+    return Apart(
+      kaptCode: json['kaptCode'] as String,
+      kaptName: json['kaptName'] as String,
+      bjdCode: json['bjdCode'] as String,
+      as1: json['as1'] as String,
+      as2: json['as2'] as String,
+      as3: json['as3'] as String,
+    );
+  }
 }
 
 Future<http.Response> postSetNick(String nickname) async {

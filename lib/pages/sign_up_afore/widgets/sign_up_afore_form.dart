@@ -6,14 +6,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:apart_forest/main.dart' as main;
 import 'package:fluttertoast/fluttertoast.dart';
 
+
+String g_searchApt;
+TextEditingController _aptText;
+
+void init(){
+  if(g_searchApt != null){
+    g_searchApt = null;
+  }
+  if(_aptText != null){
+    _aptText.dispose();
+  }
+}
+
 class SignUpAforeForm extends StatelessWidget {
 
   bool usenick;
 
+
   @override
   Widget build(BuildContext context) {
     String nickname;
-    String searchApt;
+
+    init();
+
     return BlocConsumer<SignUpFormBloc, SignUpFormState> (
       listener: (context, state) {
         print(state);
@@ -78,7 +94,14 @@ class SignUpAforeForm extends StatelessWidget {
                       ),
                       autocorrect: false,
                       autofocus: false,
-
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) {
+                        if(value.isEmpty){
+                          return '닉네임을 입력해주세요.';
+                        }else {
+                          return null;
+                        }
+                      },
                       onChanged: (value) => nickname = value,
                       // onChanged: (value) {
                       //   nickname = value.toString();
@@ -92,32 +115,6 @@ class SignUpAforeForm extends StatelessWidget {
                       //     ? null
                       //     : "Invalid Email",
                     ),
-                    MaterialButton (
-                        onPressed: (){
-                          checkNickname(nickname);
-                          // main.getUsers();
-                          FocusScope.of(context).unfocus();
-                        },
-                      color: Color(0xff347af0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        side: BorderSide(
-                          color: Color(0xff347af0),
-                        ),
-                      ),
-                        child: Container(
-                          width: 160,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '중복확인',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -128,21 +125,44 @@ class SignUpAforeForm extends StatelessWidget {
                         hintText: '아파트명을 입력하세요.',
                         suffixIcon: IconButton (
                           icon: Icon(Icons.search),
-                          onPressed: () {
-                            // main.postSearchApart(searchApt);
+                          onPressed: (){
+                            showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: _APTListviewPage(),
+                                    insetPadding:
+                                    const EdgeInsets.fromLTRB(0, 80, 0, 80),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('확인'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
                           },
                         ), //검색 아이콘 추가
                         contentPadding: EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 5),
                       ),
+                      controller: _aptText = TextEditingController(),
                       autocorrect: false,
                       autofocus: false,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) {
+                        if(value.isEmpty){
+                          return '아파트명을 입력해주세요.';
+                        }else {
+                          g_searchApt = value;
+                          return null;
+                        }
+                      },
                       onChanged: (value) => {
-                        searchApt = value,
-                        main.postSearchApart(searchApt),
+                        g_searchApt = value,
                       }
-                      // onChanged: (value) {
-                      //   searchApt = value.toString();
-                      // },
                     ),
                   ],
                 ),
@@ -150,7 +170,11 @@ class SignUpAforeForm extends StatelessWidget {
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {
-                        main.postSearchApart(searchApt);
+                        if(checkNickname(nickname) == true){ // 닉네임 사용 가능
+                          main.postSearchApart(g_searchApt);
+                        }else{ // 닉네임 사용 불가
+
+                        }
                         // main.postSetApart("A13579501");
                         FocusScope.of(context).unfocus();
                         // FocusScope.of(context).unfocus();
@@ -192,12 +216,81 @@ class SignUpAforeForm extends StatelessWidget {
   }
 }
 
-void checkNickname(String nickname) async{
+Future<bool> checkNickname(String nickname) async{
   await main.postcheckNick(nickname);
   if(main.g_duplicateName){
     await flutterToast();
+    return false;
   }else{
     await main.postSetNick(nickname);
+    return true;
+  }
+}
+
+class _APTListviewPage extends StatelessWidget {
+  const _APTListviewPage({Key key}) : super(key: key);
+  // void ScreenSearchAPT() async{
+  //   main.postSearchApart(g_searchApt);
+  //
+  // }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('검색결과'),
+      ),
+      body: FutureBuilder<List<main.Apart>>(
+        future: main.postSearchApart(g_searchApt),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+
+          return snapshot.hasData
+              ? ApartList(aparts: snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+}
+
+class ApartList extends StatelessWidget {
+  final List<main.Apart> aparts;
+
+  ApartList({Key key, this.aparts}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        childAspectRatio: 3 / 1,
+      ),
+      itemCount: aparts.length,
+      itemBuilder: (context, index) {
+        return Scaffold(
+            backgroundColor: Colors.green[(index%2) * 100],
+            body: SafeArea(
+            child: Column(
+              children: <Widget>[
+                InkWell(
+                onTap: () async{
+                  print('onTap : ' + aparts[index].kaptName);
+                  Navigator.of(context).pop();
+                  FocusScope.of(context).unfocus();
+                  _aptText.text = aparts[index].kaptName;
+                },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 70,
+                    child: Text(aparts[index].kaptName + '  [' + aparts[index].as1 + ' ' + aparts[index].as3 + ']'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        );
+      },
+    );
   }
 }
 
