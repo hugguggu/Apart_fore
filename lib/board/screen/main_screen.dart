@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/screen/board_screen.dart';
 import 'package:apart_forest/board/widget/bottom_bar.dart';
 import 'package:flutter/material.dart';

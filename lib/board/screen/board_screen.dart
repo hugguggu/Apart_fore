@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:apart_forest/board/model/model_post.dart';
 import 'package:flutter/material.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -46,7 +47,30 @@ class _BoardScreenState extends State<BoardScreen> {
 List<Widget> makeArticleList() {
   List<Widget> res = [];
 
-  for (var i = 0; i < 20; i++) {
+  List<Post> posts = [
+    Post.fromMap({
+      'title': 'BCDE',
+      'bodyText':
+          'Preview_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      'viewer': 13,
+      'blind': false,
+      'writer': 'XYZ',
+      'visit': 12
+      // 'comment' : ['abc', 'dec']
+    }),
+    Post.fromMap({
+      'title': 'BCDE',
+      'bodyText':
+          'Preview_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      'viewer': 13,
+      'blind': false,
+      'writer': 'XYZ',
+      'visit': 12
+      // 'comment' : ['abc', 'dec']
+    }),
+  ];
+
+  for (var i = 0; i < posts.length; i++) {
     res.add(
       Container(
         child: Column(
@@ -64,11 +88,11 @@ List<Widget> makeArticleList() {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(right: 24),
+                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        '가나다라',
+                        posts[i].title,
                         style: TextStyle(
                           fontSize: 26,
                         ),
@@ -76,16 +100,17 @@ List<Widget> makeArticleList() {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(right: 24),
+                    padding: EdgeInsets.fromLTRB(20, 2, 20, 2),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Preview_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ\nsdfsf',
+                        posts[i].bodyText,
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
                   ),
                   Container(
+                    padding: EdgeInsets.fromLTRB(5, 5, 5, 2),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -93,7 +118,7 @@ List<Widget> makeArticleList() {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Writer'),
+                              Text(posts[i].writer),
                             ],
                           ),
                         ),
@@ -105,12 +130,12 @@ List<Widget> makeArticleList() {
                                 Icons.visibility,
                                 size: 12,
                               ),
-                              Text('12'),
+                              Text(posts[i].visit.toString()),
                               Icon(
                                 Icons.comment,
                                 size: 12,
                               ),
-                              Text('12'),
+                              Text(posts[i].viewer.toString()),
                             ],
                           ),
                         ),
