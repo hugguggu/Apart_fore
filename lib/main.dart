@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:apart_forest/board/screen/main_screen.dart';
+import 'package:apart_forest/board/widget/bottom_bar.dart';
 import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
 import 'package:apart_forest/pages/sign_up_afore/sign_up_afore_page.dart';
@@ -31,9 +33,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final locale = WidgetsBinding.instance.window.locales[0];
   // await Messages.delegate.load(locale);
-  Firebase.initializeApp().whenComplete(() {
-
-  });
+  Firebase.initializeApp().whenComplete(() {});
   KakaoSdk.init(nativeAppKey: 'beab66ed5facd342394656e8af2684f6');
   configureDependencies();
   runApp(const MyApp());
@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 String g_accessToken;
 String g_refreshToken;
 String g_providerUserId;
@@ -64,7 +63,7 @@ bool g_isUser;
 bool g_setName;
 bool g_duplicateName;
 
-String getCookie(){
+String getCookie() {
   return g_cookie;
 }
 
@@ -74,14 +73,14 @@ void setCookie(String strCookie) {
   print('g_cookie : ${g_cookie}');
 }
 
-
 Future<http.Response> signOut() async {
   var url = Uri.parse(
     'http://61.77.114.199:8680/auth/signout',
   );
 
-  var response = await http.delete(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie},
+  var response = await http.delete(
+    url,
+    headers: {"Content-Type": "application/json", "Cookie": g_cookie},
   );
 
   print("${response.headers}");
@@ -96,8 +95,12 @@ Future<http.Response> getUsers() async {
     'http://61.77.114.199:8680/users',
   );
   // GET
-  var response = await http.get(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie.toString(),},
+  var response = await http.get(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+      "Cookie": g_cookie.toString(),
+    },
   );
   print('Response status: ${response.statusCode}');
   print('Response body: ${response.body}');
@@ -125,8 +128,7 @@ Future<http.Response> postSetApart(String kaptCode) async {
 
   var response = await http.post(url,
       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body
-  );
+      body: body);
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
@@ -146,8 +148,7 @@ Future<http.Response> postSearchApart(String search) async {
 
   var response = await http.post(url,
       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body
-  );
+      body: body);
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
@@ -167,16 +168,16 @@ Future<http.Response> postSetNick(String nickname) async {
 
   var response = await http.post(url,
       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body
-  );
-  print('Set nickname : '+ nickname);
+      body: body);
+  print('Set nickname : ' + nickname);
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
 
-  if(response.body == "OK"){
+  if (response.body == "OK") {
     g_setName = true;
-  }else g_setName = false;
+  } else
+    g_setName = false;
 
   return response;
 }
@@ -194,16 +195,16 @@ Future<http.Response> postcheckNick(String nickname) async {
 
   var response = await http.post(url,
       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body
-  );
-  print('Check nickname : '+ nickname);
+      body: body);
+  print('Check nickname : ' + nickname);
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
 
-  if(response.body == "true"){
+  if (response.body == "true") {
     g_duplicateName = true;
-  }else g_duplicateName = false;
+  } else
+    g_duplicateName = false;
 
   return response;
 }
@@ -223,9 +224,7 @@ Future<http.Response> postSignin() async {
   var body = json.encode(data);
 
   var response = await http.post(url,
-      headers: {"Content-Type": "application/json"},
-      body: body
-  );
+      headers: {"Content-Type": "application/json"}, body: body);
   print("${response.headers}");
   print("${response.statusCode}");
   print("${response.body}");
@@ -247,9 +246,7 @@ Future<AccessTokenInfo> get_user_access_token() async {
 }
 
 class StartPage extends StatelessWidget {
-
   bool isKakaoLogin = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -288,11 +285,12 @@ class StartPage extends StatelessWidget {
                 height: 20,
               ),
               InkWell(
-                onTap: () async{
-                  void checkKakao() async{
+                onTap: () async {
+                  void checkKakao() async {
                     if (await isKakaoTalkInstalled()) {
                       try {
-                        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+                        OAuthToken token =
+                            await UserApi.instance.loginWithKakaoTalk();
                         isKakaoLogin = true;
                         print('카카오톡으로 로그인 성공');
                         print('accessToken : ');
@@ -306,13 +304,13 @@ class StartPage extends StatelessWidget {
                         g_providerUserId = user.id.toString();
                         print('providerUserId : ');
                         print(g_providerUserId);
-
                       } catch (error) {
                         print('카카오톡으로 로그인 실패 $error');
                         isKakaoLogin = false;
                         // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
                         try {
-                          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+                          OAuthToken token =
+                              await UserApi.instance.loginWithKakaoAccount();
                           isKakaoLogin = true;
                           print('카카오계정으로 로그인 성공');
                           print('accessToken : ');
@@ -333,7 +331,8 @@ class StartPage extends StatelessWidget {
                       }
                     } else {
                       try {
-                        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+                        OAuthToken token =
+                            await UserApi.instance.loginWithKakaoAccount();
                         print('카카오계정으로 로그인 성공');
                         print('accessToken : ');
                         print(token.accessToken);
@@ -353,10 +352,12 @@ class StartPage extends StatelessWidget {
                       }
                     }
                   }
+
                   await checkKakao();
 
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    if(isKakaoLogin){ // 카카오톡 - 아숲 연동 완료
+                    if (isKakaoLogin) {
+                      // 카카오톡 - 아숲 연동 완료
                       postSignin();
                       getUsers();
                       // if(getUsers()){
@@ -365,15 +366,13 @@ class StartPage extends StatelessWidget {
                       //
                       // }
                       return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
-                    }else{
-                    }
+                    } else {}
                   }));
                 },
                 child: Container(
-                  child: Column(
-                      children: <Widget>[
-                        Image.asset('assets/images/kakao_login_medium_wide.png'),
-                      ]),
+                  child: Column(children: <Widget>[
+                    Image.asset('assets/images/kakao_login_medium_wide.png'),
+                  ]),
                 ),
               ),
               SizedBox(
@@ -409,6 +408,34 @@ class StartPage extends StatelessWidget {
                 ),
               ),
               */
+              MaterialButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                  );
+                  // return MaterialApp(home: MainScreen());
+                },
+                color: Color(0xff347af0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  side: BorderSide(
+                    color: Color(0xff347af0),
+                  ),
+                ),
+                child: Container(
+                  width: 240,
+                  height: 40,
+                  alignment: Alignment.center,
+                  child: Text(
+                    '게시판 테스트 페이지 (삭제예정)',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -416,4 +443,3 @@ class StartPage extends StatelessWidget {
     );
   }
 }
-
