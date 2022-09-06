@@ -1,13 +1,16 @@
 import 'package:apart_forest/application/auth/sign_up_form/bloc/sign_up_form_bloc.dart';
 import 'package:apart_forest/domain/core/value_validators.dart';
 import 'package:apart_forest/infrastructure/auth/auth_failure_or_success.dart';
+import 'package:apart_forest/pages/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:apart_forest/main.dart' as main;
 import 'package:fluttertoast/fluttertoast.dart';
 
 
-String g_searchApt;
+String g_searchApt = null;
+String g_setAptCode = null;
+bool g_setApt = false;
 TextEditingController _aptText;
 
 void init(){
@@ -103,22 +106,12 @@ class SignUpAforeForm extends StatelessWidget {
                         }
                       },
                       onChanged: (value) => nickname = value,
-                      // onChanged: (value) {
-                      //   nickname = value.toString();
-                      // },
-                      // 닉네임 확인 절차 필요(아래 이메일 체크 예시)
-                      // onChanged: (value) => context
-                      //     .bloc<SignUpFormBloc>()
-                      //     .add(SignUpFormEvent.emailChange(value)),
-                      // validator: (_) => validateEmailAddress(
-                      //     context.bloc<SignUpFormBloc>().state.emailAddress)
-                      //     ? null
-                      //     : "Invalid Email",
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _aptText = TextEditingController(),
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.add_business_rounded),
                         labelText: '주거 아파트',
@@ -148,12 +141,13 @@ class SignUpAforeForm extends StatelessWidget {
                         ), //검색 아이콘 추가
                         contentPadding: EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 5),
                       ),
-                      controller: _aptText = TextEditingController(),
                       autocorrect: false,
                       autofocus: false,
                       autovalidateMode: AutovalidateMode.always,
                       validator: (value) {
                         if(value.isEmpty){
+                          g_searchApt = null;
+                          g_setApt = false;
                           return '아파트명을 입력해주세요.';
                         }else {
                           g_searchApt = value;
@@ -170,13 +164,21 @@ class SignUpAforeForm extends StatelessWidget {
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {
-                        if(checkNickname(nickname) == true){ // 닉네임 사용 가능
-                          main.postSearchApart(g_searchApt);
-                        }else{ // 닉네임 사용 불가
+                        checkNickname(nickname);
+                        if(main.getsetName() == true
+                            && g_setApt == true){ // 닉네임 사용 가능
+                          main.postSetApart(g_setAptCode);
+                          print('User Info set complete');
 
+                          FocusScope.of(context).unfocus();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return WelcomePage();
+                              }));
+                        }else{ // 닉네임 사용 불가
+                          FocusScope.of(context).unfocus();
                         }
                         // main.postSetApart("A13579501");
-                        FocusScope.of(context).unfocus();
                         // FocusScope.of(context).unfocus();
                         // context
                         //     .bloc<SignUpFormBloc>()
@@ -219,7 +221,7 @@ class SignUpAforeForm extends StatelessWidget {
 Future<bool> checkNickname(String nickname) async{
   await main.postcheckNick(nickname);
   if(main.g_duplicateName){
-    await flutterToast();
+    flutterToast();
     return false;
   }else{
     await main.postSetNick(nickname);
@@ -275,6 +277,8 @@ class ApartList extends StatelessWidget {
                 InkWell(
                 onTap: () async{
                   print('onTap : ' + aparts[index].kaptName);
+                  g_setAptCode = aparts[index].kaptCode;
+                  g_setApt = true;
                   Navigator.of(context).pop();
                   FocusScope.of(context).unfocus();
                   _aptText.text = aparts[index].kaptName;

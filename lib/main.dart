@@ -4,6 +4,7 @@ import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
 import 'package:apart_forest/pages/sign_up_afore/sign_up_afore_page.dart';
 import 'package:apart_forest/pages/start/start_page.dart';
+import 'package:apart_forest/pages/welcome/welcome_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -71,6 +72,14 @@ String getCookie(){
   return g_cookie;
 }
 
+bool getsetName(){
+  return g_setName;
+}
+
+void setName(bool setName){
+  g_setName = setName;
+}
+
 void setCookie(String strCookie) {
   g_cookie = strCookie;
   print('쿠키 설정 완료 SetCookie ');
@@ -105,13 +114,15 @@ Future<http.Response> getUsers() async {
   print('Response status: ${response.statusCode}');
   print('Response body: ${response.body}');
 
-  // int strNickname = response.body['nickname'] as int;
-  //
-  //
-  // if(response.body['nickname'] != null){
-  //   g_isUser = true;
-  // }else g_isUser = false;
+  String responseBody = utf8.decode(response.bodyBytes);
+  List<dynamic> list = jsonDecode(responseBody);
+  print(list[0]['nickname']);
 
+  if(list[0]['nickname'] != null){
+    g_isUser = true;
+  }else {
+    g_isUser = false;
+  }
   return response;
 }
 
@@ -229,8 +240,8 @@ Future<http.Response> postSetNick(String nickname) async {
   print("${response.body}");
 
   if(response.body == "OK"){
-    g_setName = true;
-  }else g_setName = false;
+    setName(true);
+  }else setName(false);
 
   return response;
 }
@@ -409,17 +420,17 @@ class StartPage extends StatelessWidget {
                   }
                   await checkKakao();
 
+                  if(isKakaoLogin){
+                    await postSignin();
+                    await getUsers();
+                  }
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    if(isKakaoLogin){ // 카카오톡 - 아숲 연동 완료
-                      postSignin();
-                      getUsers();
-                      // if(getUsers()){
-                      //
-                      // }else{
-                      //
-                      // }
-                      return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
-                    }else{
+                    if(isKakaoLogin) { // 카카오톡 - 아숲 연동 완료
+                      if (g_isUser) {
+                        return WelcomePage(); // 카카오톡 - 아숲 회원가입
+                      } else {
+                        return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
+                      }
                     }
                   }));
                 },
