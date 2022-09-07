@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:apart_forest/board/screen/main_screen.dart';
-import 'package:apart_forest/board/widget/bottom_bar.dart';
 import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
 import 'package:apart_forest/pages/sign_up_afore/sign_up_afore_page.dart';
@@ -45,6 +44,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Apart Private community',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -166,6 +166,7 @@ Future<http.Response> postSetNick(String nickname) async {
   //encode Map to JSON
   var body = json.encode(data);
 
+// TODO : post example
   var response = await http.post(url,
       headers: {"Content-Type": "application/json", "Cookie": g_cookie},
       body: body);
@@ -410,10 +411,11 @@ class StartPage extends StatelessWidget {
               */
               MaterialButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                  );
+                  //  로그인 페이지를 지우고 메인 화면으로 전환
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      (route) => false);
                   // return MaterialApp(home: MainScreen());
                 },
                 color: Color(0xff347af0),

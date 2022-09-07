@@ -7,34 +7,34 @@ class Bottom extends StatelessWidget {
     return Container(
       color: Colors.blueAccent,
       child: Container(
-        height: 50,
-        child: TabBar(
+        height: 75,
+        child: const TabBar(
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white60,
           indicatorColor: Colors.white,
           tabs: <Widget>[
             Tab(
               icon: Icon(
-                Icons.reorder,
-                size: 16,
+                Icons.home,
+                size: 26,
               ),
             ),
             Tab(
               icon: Icon(
                 Icons.map,
-                size: 16,
+                size: 26,
               ),
             ),
             Tab(
               icon: Icon(
-                Icons.chat_bubble,
-                size: 16,
+                Icons.question_answer,
+                size: 26,
               ),
             ),
             Tab(
               icon: Icon(
                 Icons.person,
-                size: 16,
+                size: 26,
               ),
             ),
           ],
