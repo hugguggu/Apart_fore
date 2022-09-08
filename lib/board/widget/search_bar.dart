@@ -27,13 +27,19 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    (element) => element.contains(query);
+    String ss = query;
+
     return AlertDialog(
       title: const Text('AlertDialog Title'),
       content: SingleChildScrollView(
         child: ListBody(
           children: const <Widget>[
-            Text('This is a demo alert dialog.'),
-            Text('Would you like to approve of this message?'),
+            // Uri.dataFromString(query),
+            // UriData.fromString(query)
+            // Text(ss),
+            // print(ss);
+            // Text('Would you like to approve of this message?'),
           ],
         ),
       ),
