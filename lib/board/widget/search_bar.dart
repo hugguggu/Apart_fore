@@ -1,5 +1,67 @@
 import 'package:flutter/material.dart';
 
+// Search Page
+class SearchPage extends StatefulWidget {
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  // const SearchPage({Key? key}) : super(key: key);
+
+  final searchTextFieldController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    searchTextFieldController.addListener(_printLatestValue);
+  }
+
+  @override
+  void dispose() {
+    searchTextFieldController.dispose();
+    super.dispose();
+  }
+
+  void _printLatestValue() {
+    print("Second text field: ${searchTextFieldController.text}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          // The search area here
+          title: Container(
+        width: double.infinity,
+        height: 40,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+        child: Center(
+          child: TextField(
+            controller: searchTextFieldController,
+            textInputAction: TextInputAction.go,
+            onSubmitted: (value) {
+              print("asdasd : " + searchTextFieldController.text);
+            },
+            decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    /* Clear the search field */
+                    searchTextFieldController.clear();
+                  },
+                ),
+                hintText: 'Search...',
+                border: InputBorder.none),
+          ),
+        ),
+      )),
+    );
+  }
+}
+
 class Search extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -29,28 +91,11 @@ class Search extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     (element) => element.contains(query);
     String ss = query;
-
-    return AlertDialog(
-      title: const Text('AlertDialog Title'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: const <Widget>[
-            // Uri.dataFromString(query),
-            // UriData.fromString(query)
-            // Text(ss),
-            // print(ss);
-            // Text('Would you like to approve of this message?'),
-          ],
-        ),
+    print(ss);
+    return Container(
+      child: Center(
+        child: Text(ss),
       ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Approve'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
     );
   }
 

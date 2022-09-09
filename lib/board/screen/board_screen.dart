@@ -26,7 +26,9 @@ class _BoardScreenState extends State<BoardScreen> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              showSearch(context: context, delegate: Search(widget.list));
+              // showSearch(context: context, delegate: Search(widget.list));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => SearchPage()));
             },
           ),
         ],
