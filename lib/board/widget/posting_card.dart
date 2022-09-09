@@ -1,25 +1,25 @@
 import 'package:apart_forest/board/model/model_post.dart';
+import 'package:apart_forest/board/screen/read_screen.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class postcard extends StatelessWidget {
   // const postcard({super.key});
-  final Post post;
 
   const postcard({Key key, this.post}) : super(key: key);
-
+  final Post post;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         InkWell(
           onTap: () {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-            //   return DetailScreen(
-            //     movies: movies[i],
-            //   );
-            // }));
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return ReadScreen(
+                post: post,
+              );
+            }));
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
