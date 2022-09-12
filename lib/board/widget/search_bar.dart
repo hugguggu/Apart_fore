@@ -11,21 +11,21 @@ class _SearchPageState extends State<SearchPage> {
 
   final searchTextFieldController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    searchTextFieldController.addListener(_printLatestValue);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   searchTextFieldController.addListener(_printLatestValue);
+  // }
 
-  @override
-  void dispose() {
-    searchTextFieldController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   searchTextFieldController.dispose();
+  //   super.dispose();
+  // }
 
-  void _printLatestValue() {
-    print("Second text field: ${searchTextFieldController.text}");
-  }
+  // void _printLatestValue() {
+  //   print("Second text field: ${searchTextFieldController.text}");
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/fttp_class.dart';
 import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/screen/board_screen.dart';
 import 'package:apart_forest/board/widget/bottom_bar.dart';
@@ -10,9 +11,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  NetworkSingleton net = NetworkSingleton();
+
   @override
   void initState() {
     super.initState();
+
+    print(NetworkSingleton().getCookie());
   }
 
   @override
@@ -20,9 +25,9 @@ class _MainScreenState extends State<MainScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
+        // brightness: Brightness.light,
         primaryColor: Colors.blueAccent,
-        accentColor: Colors.orangeAccent,
+        // accentColor: Colors.orangeAccent,
         focusColor: Colors.orangeAccent,
       ),
       home: DefaultTabController(
