@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:apart_forest/board/model/fttp_class.dart';
 import 'package:apart_forest/board/screen/main_screen.dart';
 import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
@@ -232,6 +233,12 @@ Future<http.Response> postSignin() async {
 
   String cookie = response.headers['set-cookie'];
   setCookie(cookie);
+
+  NetworkSingleton().setAccessToken(g_accessToken);
+  NetworkSingleton().setRefreshToken(g_refreshToken);
+  NetworkSingleton().setProviderUserId(g_providerUserId);
+  NetworkSingleton().setCookie(cookie);
+
   return response;
 }
 
