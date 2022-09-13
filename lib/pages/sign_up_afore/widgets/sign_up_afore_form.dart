@@ -1,42 +1,71 @@
 import 'package:apart_forest/application/auth/sign_up_form/bloc/sign_up_form_bloc.dart';
+import 'package:apart_forest/board/model/Apart_model.dart';
+import 'package:apart_forest/board/model/back_end.dart';
 import 'package:apart_forest/domain/core/value_validators.dart';
 import 'package:apart_forest/infrastructure/auth/auth_failure_or_success.dart';
+import 'package:apart_forest/pages/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:apart_forest/main.dart' as main;
 import 'package:fluttertoast/fluttertoast.dart';
 
-class SignUpAforeForm extends StatelessWidget {
+String g_searchApt = null;
+String g_setAptCode = null;
+bool g_setApt = false;
+TextEditingController _aptText;
 
+void init() {
+  if (g_searchApt != null) {
+    g_searchApt = null;
+  }
+  if (_aptText != null) {
+    _aptText.dispose();
+  }
+}
+
+class SignUpAforeForm extends StatelessWidget {
   bool usenick;
 
   @override
   Widget build(BuildContext context) {
     String nickname;
-    String searchApt;
-    return BlocConsumer<SignUpFormBloc, SignUpFormState> (
+
+    init();
+
+    return BlocConsumer<SignUpFormBloc, SignUpFormState>(
       listener: (context, state) {
         print(state);
         if (state.authFailureOrSuccess == AuthFailureOrSuccess.success()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.blue,
-            content: Text('Success'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.emailAlreadyInUse()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Email Already In Use'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.invalidEmailAndPassword()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Invalid Email And Password'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.serverError()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Server Error'),
-          ));
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.blue,
+                content: Text('Success'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.emailAlreadyInUse()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Email Already In Use'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.invalidEmailAndPassword()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Invalid Email And Password'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.serverError()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Server Error'),
+              ));
         }
       },
       builder: (context, state) {
@@ -55,7 +84,7 @@ class SignUpAforeForm extends StatelessWidget {
             ),
           ),
           child: Form(
-           // autovalidate: state.showErrorMessages,
+            // autovalidate: state.showErrorMessages,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -74,85 +103,95 @@ class SignUpAforeForm extends StatelessWidget {
                         //         color: Colors.grey //change icon color according to form validation
                         //     )),
 
-                        contentPadding: EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 5),
+                        contentPadding: EdgeInsets.only(
+                            left: 5, bottom: 5, top: 5, right: 5),
                       ),
                       autocorrect: false,
                       autofocus: false,
-
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return '닉네임을 입력해주세요.';
+                        } else {
+                          return null;
+                        }
+                      },
                       onChanged: (value) => nickname = value,
-                      // onChanged: (value) {
-                      //   nickname = value.toString();
-                      // },
-                      // 닉네임 확인 절차 필요(아래 이메일 체크 예시)
-                      // onChanged: (value) => context
-                      //     .bloc<SignUpFormBloc>()
-                      //     .add(SignUpFormEvent.emailChange(value)),
-                      // validator: (_) => validateEmailAddress(
-                      //     context.bloc<SignUpFormBloc>().state.emailAddress)
-                      //     ? null
-                      //     : "Invalid Email",
-                    ),
-                    MaterialButton (
-                        onPressed: (){
-                          checkNickname(nickname);
-                          // main.getUsers();
-                          FocusScope.of(context).unfocus();
-                        },
-                      color: Color(0xff347af0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        side: BorderSide(
-                          color: Color(0xff347af0),
-                        ),
-                      ),
-                        child: Container(
-                          width: 160,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '중복확인',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.add_business_rounded),
-                        labelText: '주거 아파트',
-                        hintText: '아파트명을 입력하세요.',
-                        suffixIcon: IconButton (
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            // main.postSearchApart(searchApt);
-                          },
-                        ), //검색 아이콘 추가
-                        contentPadding: EdgeInsets.only(left: 5, bottom: 5, top: 5, right: 5),
-                      ),
-                      autocorrect: false,
-                      autofocus: false,
-                      onChanged: (value) => {
-                        searchApt = value,
-                        main.postSearchApart(searchApt),
-                      }
-                      // onChanged: (value) {
-                      //   searchApt = value.toString();
-                      // },
-                    ),
+                        controller: _aptText = TextEditingController(),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.add_business_rounded),
+                          labelText: '주거 아파트',
+                          hintText: '아파트명을 입력하세요.',
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      content: _APTListviewPage(),
+                                      insetPadding: const EdgeInsets.fromLTRB(
+                                          0, 80, 0, 80),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text('확인'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            },
+                          ), //검색 아이콘 추가
+                          contentPadding: EdgeInsets.only(
+                              left: 5, bottom: 5, top: 5, right: 5),
+                        ),
+                        autocorrect: false,
+                        autofocus: false,
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            g_searchApt = null;
+                            g_setApt = false;
+                            return '아파트명을 입력해주세요.';
+                          } else {
+                            g_searchApt = value;
+                            return null;
+                          }
+                        },
+                        onChanged: (value) => {
+                              g_searchApt = value,
+                            }),
                   ],
                 ),
                 Column(
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {
-                        main.postSearchApart(searchApt);
+                        checkNickname(nickname);
+                        if (NetworkSingleton().getSetName() == true &&
+                            g_setApt == true) {
+                          // 닉네임 사용 가능
+                          NetworkSingleton().postSetApart(g_setAptCode);
+                          print('User Info set complete');
+
+                          FocusScope.of(context).unfocus();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return WelcomePage();
+                          }));
+                        } else {
+                          // 닉네임 사용 불가
+                          FocusScope.of(context).unfocus();
+                        }
                         // main.postSetApart("A13579501");
-                        FocusScope.of(context).unfocus();
                         // FocusScope.of(context).unfocus();
                         // context
                         //     .bloc<SignUpFormBloc>()
@@ -187,21 +226,98 @@ class SignUpAforeForm extends StatelessWidget {
       },
     );
   }
+
   void showSnackBar(BuildContext context, Widget snackBar) {
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
-void checkNickname(String nickname) async{
-  await main.postcheckNick(nickname);
-  if(main.g_duplicateName){
-    await flutterToast();
-  }else{
-    await main.postSetNick(nickname);
+Future<bool> checkNickname(String nickname) async {
+  await NetworkSingleton().postcheckNick(nickname);
+  if (NetworkSingleton().getDuplicateName()) {
+    flutterToast();
+    return false;
+  } else {
+    await NetworkSingleton().postSetNick(nickname);
+    return true;
   }
 }
 
-void flutterToast() async{
+class _APTListviewPage extends StatelessWidget {
+  const _APTListviewPage({Key key}) : super(key: key);
+  // void ScreenSearchAPT() async{
+  //   main.postSearchApart(g_searchApt);
+  //
+  // }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('검색결과'),
+      ),
+      body: FutureBuilder<List<Apart>>(
+        future: NetworkSingleton().postSearchApart(g_searchApt),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+
+          return snapshot.hasData
+              ? ApartList(aparts: snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+}
+
+class ApartList extends StatelessWidget {
+  final List<Apart> aparts;
+
+  ApartList({Key key, this.aparts}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        childAspectRatio: 3 / 1,
+      ),
+      itemCount: aparts.length,
+      itemBuilder: (context, index) {
+        return Scaffold(
+          backgroundColor: Colors.green[(index % 2) * 100],
+          body: SafeArea(
+            child: Column(
+              children: <Widget>[
+                InkWell(
+                  onTap: () async {
+                    print('onTap : ' + aparts[index].kaptName);
+                    g_setAptCode = aparts[index].kaptCode;
+                    g_setApt = true;
+                    Navigator.of(context).pop();
+                    FocusScope.of(context).unfocus();
+                    _aptText.text = aparts[index].kaptName;
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 70,
+                    child: Text(aparts[index].kaptName +
+                        '  [' +
+                        aparts[index].as1 +
+                        ' ' +
+                        aparts[index].as3 +
+                        ']'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+void flutterToast() async {
   await Fluttertoast.showToast(
       msg: "중복된 닉네임 입니다.",
       toastLength: Toast.LENGTH_SHORT,
@@ -209,6 +325,5 @@ void flutterToast() async{
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0
-  );
+      fontSize: 16.0);
 }

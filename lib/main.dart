@@ -1,18 +1,16 @@
 import 'dart:io';
 
-import 'package:apart_forest/board/model/fttp_class.dart';
+import 'package:apart_forest/board/model/back_end.dart';
 import 'package:apart_forest/board/screen/main_screen.dart';
 import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
 import 'package:apart_forest/pages/sign_up_afore/sign_up_afore_page.dart';
 import 'package:apart_forest/pages/start/start_page.dart';
+import 'package:apart_forest/pages/welcome/welcome_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:async';
 import 'package:get/get.dart';
 
@@ -53,203 +51,6 @@ class MyApp extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: StartPage(),
     );
-  }
-}
-
-String g_accessToken;
-String g_refreshToken;
-String g_providerUserId;
-String g_cookie;
-bool g_isUser;
-bool g_setName;
-bool g_duplicateName;
-
-String getCookie() {
-  return g_cookie;
-}
-
-void setCookie(String strCookie) {
-  g_cookie = strCookie;
-  print('쿠키 설정 완료 SetCookie ');
-  print('g_cookie : ${g_cookie}');
-}
-
-Future<http.Response> signOut() async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/auth/signout',
-  );
-
-  var response = await http.delete(
-    url,
-    headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-  );
-
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-
-  return response;
-}
-
-Future<http.Response> getUsers() async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/users',
-  );
-  // GET
-  var response = await http.get(
-    url,
-    headers: {
-      "Content-Type": "application/json",
-      "Cookie": g_cookie.toString(),
-    },
-  );
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-
-  // int strNickname = response.body['nickname'] as int;
-  //
-  //
-  // if(response.body['nickname'] != null){
-  //   g_isUser = true;
-  // }else g_isUser = false;
-
-  return response;
-}
-
-Future<http.Response> postSetApart(String kaptCode) async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/users/set-kapt-code',
-  );
-
-  Map data = {
-    'kaptCode': kaptCode,
-  };
-  //encode Map to JSON
-  var body = json.encode(data);
-
-  var response = await http.post(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body);
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-  return response;
-}
-
-Future<http.Response> postSearchApart(String search) async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/apts/get-list',
-  );
-
-  Map data = {
-    'keyword': search,
-  };
-  //encode Map to JSON
-  var body = json.encode(data);
-
-  var response = await http.post(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body);
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-  return response;
-}
-
-Future<http.Response> postSetNick(String nickname) async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/users/set-nickname',
-  );
-
-  Map data = {
-    'nickname': nickname,
-  };
-  //encode Map to JSON
-  var body = json.encode(data);
-
-// TODO : post example
-  var response = await http.post(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body);
-  print('Set nickname : ' + nickname);
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-
-  if (response.body == "OK") {
-    g_setName = true;
-  } else
-    g_setName = false;
-
-  return response;
-}
-
-Future<http.Response> postcheckNick(String nickname) async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/users/check-nickname',
-  );
-
-  Map data = {
-    'nickname': nickname,
-  };
-  //encode Map to JSON
-  var body = json.encode(data);
-
-  var response = await http.post(url,
-      headers: {"Content-Type": "application/json", "Cookie": g_cookie},
-      body: body);
-  print('Check nickname : ' + nickname);
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-
-  if (response.body == "true") {
-    g_duplicateName = true;
-  } else
-    g_duplicateName = false;
-
-  return response;
-}
-
-// 로그인 요청, receive cookie
-Future<http.Response> postSignin() async {
-  var url = Uri.parse(
-    'http://61.77.114.199:8680/auth/signin/kakao',
-  );
-
-  Map data = {
-    'accessToken': g_accessToken,
-    'refreshToken': g_refreshToken,
-    'providerUserId': g_providerUserId,
-  };
-  //encode Map to JSON
-  var body = json.encode(data);
-
-  var response = await http.post(url,
-      headers: {"Content-Type": "application/json"}, body: body);
-  print("${response.headers}");
-  print("${response.statusCode}");
-  print("${response.body}");
-
-  String cookie = response.headers['set-cookie'];
-  setCookie(cookie);
-
-  NetworkSingleton().setAccessToken(g_accessToken);
-  NetworkSingleton().setRefreshToken(g_refreshToken);
-  NetworkSingleton().setProviderUserId(g_providerUserId);
-  NetworkSingleton().setCookie(cookie);
-
-  return response;
-}
-
-Future<AccessTokenInfo> get_user_access_token() async {
-  try {
-    AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-    print('토큰 정보 보기 성공 : '
-        '\n: ${tokenInfo}');
-    return tokenInfo;
-  } catch (error) {
-    print('토큰 정보 보기 실패 $error');
   }
 }
 
@@ -303,15 +104,19 @@ class StartPage extends StatelessWidget {
                         print('카카오톡으로 로그인 성공');
                         print('accessToken : ');
                         print(token.accessToken);
-                        g_accessToken = token.accessToken;
+                        // g_accessToken = token.accessToken;
+                        NetworkSingleton().setAccessToken(token.accessToken);
                         print('refreshToken : ');
                         print(token.refreshToken);
-                        g_refreshToken = token.refreshToken;
+                        // g_refreshToken = token.refreshToken;
+                        NetworkSingleton().setRefreshToken(token.refreshToken);
 
                         User user = await UserApi.instance.me();
-                        g_providerUserId = user.id.toString();
+                        // g_providerUserId = user.id.toString();
+                        NetworkSingleton()
+                            .setProviderUserId(user.id.toString());
                         print('providerUserId : ');
-                        print(g_providerUserId);
+                        print(NetworkSingleton().getpProviderUserId());
                       } catch (error) {
                         print('카카오톡으로 로그인 실패 $error');
                         isKakaoLogin = false;
@@ -323,15 +128,18 @@ class StartPage extends StatelessWidget {
                           print('카카오계정으로 로그인 성공');
                           print('accessToken : ');
                           print(token.accessToken);
-                          g_accessToken = token.accessToken;
+                          // g_accessToken = token.accessToken;
+                          NetworkSingleton().setAccessToken(token.accessToken);
                           print('refreshToken : ');
                           print(token.refreshToken);
-                          g_refreshToken = token.refreshToken;
+                          NetworkSingleton()
+                              .setRefreshToken(token.refreshToken);
 
                           User user = await UserApi.instance.me();
-                          g_providerUserId = user.id.toString();
+                          NetworkSingleton()
+                              .setProviderUserId(user.id.toString());
                           print('providerUserId : ');
-                          print(g_providerUserId);
+                          print(NetworkSingleton().getpProviderUserId());
                         } catch (error) {
                           print('카카오계정으로 로그인 실패 $error');
                           isKakaoLogin = false;
@@ -344,15 +152,16 @@ class StartPage extends StatelessWidget {
                         print('카카오계정으로 로그인 성공');
                         print('accessToken : ');
                         print(token.accessToken);
-                        g_accessToken = token.accessToken;
+                        NetworkSingleton().setAccessToken(token.accessToken);
                         print('refreshToken : ');
                         print(token.refreshToken);
-                        g_refreshToken = token.refreshToken;
+                        NetworkSingleton().setRefreshToken(token.refreshToken);
 
                         User user = await UserApi.instance.me();
-                        g_providerUserId = user.id.toString();
+                        NetworkSingleton()
+                            .setProviderUserId(user.id.toString());
                         print('providerUserId : ');
-                        print(g_providerUserId);
+                        print(NetworkSingleton().getpProviderUserId());
                         isKakaoLogin = true;
                       } catch (error) {
                         print('카카오계정으로 로그인 실패 $error');
@@ -363,18 +172,20 @@ class StartPage extends StatelessWidget {
 
                   await checkKakao();
 
+                  if (isKakaoLogin) {
+                    // await signDel();
+                    await NetworkSingleton().postSignin();
+                    await NetworkSingleton().getUsers();
+                  }
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     if (isKakaoLogin) {
                       // 카카오톡 - 아숲 연동 완료
-                      postSignin();
-                      getUsers();
-                      // if(getUsers()){
-                      //
-                      // }else{
-                      //
-                      // }
-                      return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
-                    } else {}
+                      if (NetworkSingleton().getIsUser()) {
+                        return WelcomePage(); // 카카오톡 - 아숲 회원가입
+                      } else {
+                        return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
+                      }
+                    }
                   }));
                 },
                 child: Container(

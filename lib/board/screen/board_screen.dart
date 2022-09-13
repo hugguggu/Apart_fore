@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/back_end.dart';
 import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
 import 'package:apart_forest/board/widget/posting_card.dart';
@@ -70,10 +71,14 @@ class _BoardScreenState extends State<BoardScreen> {
         onPressed: () {
           // Add your onPressed code here!
           // post_test();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WriteScreen()),
-          );
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => WriteScreen()),
+          // );
+
+          NetworkSingleton().posting();
+          NetworkSingleton().getPostingList();
         },
         backgroundColor: Colors.blueAccent,
         child: const Icon(Icons.add),

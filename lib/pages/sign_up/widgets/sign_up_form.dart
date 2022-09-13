@@ -11,25 +11,36 @@ class SignUpForm extends StatelessWidget {
       listener: (context, state) {
         print(state);
         if (state.authFailureOrSuccess == AuthFailureOrSuccess.success()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.blue,
-            content: Text('Success'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.emailAlreadyInUse()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Email Already In Use'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.invalidEmailAndPassword()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Invalid Email And Password'),
-          ));
-        } else if (state.authFailureOrSuccess == AuthFailureOrSuccess.serverError()) {
-          showSnackBar(context, SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Server Error'),
-          ));
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.blue,
+                content: Text('Success'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.emailAlreadyInUse()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Email Already In Use'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.invalidEmailAndPassword()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Invalid Email And Password'),
+              ));
+        } else if (state.authFailureOrSuccess ==
+            AuthFailureOrSuccess.serverError()) {
+          showSnackBar(
+              context,
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Server Error'),
+              ));
         }
       },
       builder: (context, state) {
@@ -65,7 +76,7 @@ class SignUpForm extends StatelessWidget {
                           .bloc<SignUpFormBloc>()
                           .add(SignUpFormEvent.emailChange(value)),
                       validator: (_) => validateEmailAddress(
-                          context.bloc<SignUpFormBloc>().state.emailAddress)
+                              context.bloc<SignUpFormBloc>().state.emailAddress)
                           ? null
                           : "Invalid Email",
                     ),
@@ -81,7 +92,7 @@ class SignUpForm extends StatelessWidget {
                           .bloc<SignUpFormBloc>()
                           .add(SignUpFormEvent.passwordChange(value)),
                       validator: (_) => validatePassword(
-                          context.bloc<SignUpFormBloc>().state.password)
+                              context.bloc<SignUpFormBloc>().state.password)
                           ? null
                           : 'Short Password',
                     ),
@@ -92,9 +103,8 @@ class SignUpForm extends StatelessWidget {
                     MaterialButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();
-                        context
-                            .bloc<SignUpFormBloc>()
-                            .add(SignUpFormEvent.registerWithEmailAndPassword());
+                        context.bloc<SignUpFormBloc>().add(
+                            SignUpFormEvent.registerWithEmailAndPassword());
                       },
                       color: Color(0xff347af0),
                       shape: RoundedRectangleBorder(
@@ -125,7 +135,8 @@ class SignUpForm extends StatelessWidget {
       },
     );
   }
+
   void showSnackBar(BuildContext context, Widget snackBar) {
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

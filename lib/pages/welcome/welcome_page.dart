@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/screen/main_screen.dart';
 import 'package:apart_forest/utils/items.dart';
 import 'package:flutter/material.dart';
 
@@ -104,9 +105,13 @@ class WelcomePage extends StatelessWidget {
                               _pageViewController.animateToPage(index + 1,
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.ease);
-                            } else {
-
-                            }
+                            } else if (index == 3) {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainScreen()),
+                                  (route) => false);
+                            } else {}
                           },
                           color: index != 3
                               ? Colors.transparent
