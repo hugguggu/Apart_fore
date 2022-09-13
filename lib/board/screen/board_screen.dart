@@ -1,5 +1,8 @@
-import 'package:apart_forest/board/model/back_end.dart';
-import 'package:apart_forest/board/model/model_post.dart';
+import 'dart:convert';
+
+import 'package:apart_forest/board/model/network_singleton.dart';
+import 'package:apart_forest/board/model/post_item_singlton.dart';
+import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
 import 'package:apart_forest/board/widget/posting_card.dart';
 import 'package:apart_forest/board/widget/search_bar.dart';
@@ -14,15 +17,20 @@ class BoardScreen extends StatefulWidget {
 }
 
 class _BoardScreenState extends State<BoardScreen> {
-  List<Post> postList = [];
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+
+  @override
+  void initState() {
+    super.initState();
+    // _loadPostItem();
+  }
 
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
       appBar: AppBar(
-        title: const Text('A.Fore Board'),
+        title: Text(UserInfo().getKaptName()),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
@@ -37,22 +45,22 @@ class _BoardScreenState extends State<BoardScreen> {
       body: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
-        header: WaterDropHeader(),
+        header: const WaterDropHeader(),
         footer: CustomFooter(
           builder: (BuildContext context, LoadStatus mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = Text("pull up load");
+              body = const Text("pull up load");
             } else if (mode == LoadStatus.loading) {
-              body = CupertinoActivityIndicator();
+              body = const CupertinoActivityIndicator();
             } else if (mode == LoadStatus.failed) {
-              body = Text("Load Failed!Click retry!");
+              body = const Text("Load Failed!Click retry!");
             } else if (mode == LoadStatus.canLoading) {
-              body = Text("release to load more");
+              body = const Text("release to load more");
             } else {
-              body = Text("No more Data");
+              body = const Text("No more Data");
             }
-            return Container(
+            return SizedBox(
               height: 55.0,
               child: Center(child: body),
             );
@@ -62,23 +70,19 @@ class _BoardScreenState extends State<BoardScreen> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: ListView.builder(
-          itemBuilder: (c, i) => postcard(post: postList[i]),
+          itemBuilder: (c, i) => postcard(post: PostItem().getPostItembyIdx(i)),
           // itemExtent: 100.0,
-          itemCount: postList.length,
+          itemCount: PostItem().getPostItemNum(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your onPressed code here!
-          // post_test();
 
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => WriteScreen()),
-          // );
-
-          NetworkSingleton().posting();
-          NetworkSingleton().getPostingList();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WriteScreen()),
+          );
         },
         backgroundColor: Colors.blueAccent,
         child: const Icon(Icons.add),
@@ -88,34 +92,24 @@ class _BoardScreenState extends State<BoardScreen> {
 
   void _onRefresh() async {
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     // if failed,use refreshFailed()
+    PostItem().reLoadPostItem(funcSetState);
+    // if (mounted) setState(() {});
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     // items.add((items.length + 1).toString());
-    post_test();
-    if (mounted) setState(() {});
+    PostItem().reLoadPostItem(funcSetState);
+    // if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
 
-  // ignore: non_constant_identifier_names
-  void post_test() {
-    Post post = Post.fromMap({
-      'title': 'BCDE',
-      'bodyText':
-          'Preview_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      'viewer': 13,
-      'blind': false,
-      'writer': 'XYZ',
-      'visit': 12
-      // 'comment' : ['abc', 'dec']
-    });
-    postList.add(post);
+  void funcSetState() {
     setState(() {});
   }
 }

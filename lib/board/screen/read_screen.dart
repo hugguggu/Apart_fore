@@ -1,8 +1,8 @@
-import 'package:apart_forest/board/model/model_post.dart';
+import 'package:apart_forest/board/model/article_model.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
-  final Post post;
+  final article_apt post;
 
   const ReadScreen({Key key, this.post}) : super(key: key);
 
@@ -61,7 +61,7 @@ class _ReadScreenState extends State<ReadScreen> {
             ),
             Expanded(
               child: TextField(
-                controller: TextEditingController(text: widget.post.bodyText),
+                controller: TextEditingController(text: widget.post.content),
                 decoration: const InputDecoration(labelText: 'Message'),
                 // controller: TextEditingController().text = 'dsfsd',
                 maxLines: null,

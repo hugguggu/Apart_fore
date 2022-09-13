@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:apart_forest/board/model/Apart_model.dart';
+import 'package:apart_forest/board/model/article_model.dart';
+import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
@@ -12,6 +14,7 @@ class NetworkSingleton {
   bool isUser;
   bool setName;
   bool duplicateName;
+  String aptName;
 
   final String serverAddress = 'http://61.77.114.199:8680';
 
@@ -67,6 +70,10 @@ class NetworkSingleton {
     return duplicateName;
   }
 
+  String getAptName() {
+    return aptName;
+  }
+
   Future<http.Response> signOut() async {
     var url = Uri.parse(
       '$serverAddress/auth/signout',
@@ -84,7 +91,7 @@ class NetworkSingleton {
     return response;
   }
 
-  Future<http.Response> signDel() async {
+  Future<http.Response> signDelete() async {
     var url = Uri.parse(
       '$serverAddress/auth/delete',
     );
@@ -224,6 +231,13 @@ class NetworkSingleton {
     } else {
       isUser = false;
     }
+
+    UserInfo().setId(json['id']);
+    UserInfo().setNickName(json['nickname']);
+    UserInfo().setCreateAt(json['createAt']);
+    UserInfo().setDeleteAt(json['deleteAt']);
+    UserInfo().setAptKaptCode(json['aptKaptCode']);
+    UserInfo().setKaptName(json['kaptName']);
     return response;
   }
 
@@ -274,15 +288,16 @@ class NetworkSingleton {
     return parsed.map<Apart>((json) => Apart.fromJson(json)).toList();
   }
 
-  Future<http.Response> posting() async {
+  Future<http.Response> posting(
+      int category, String title, String content) async {
     var url = Uri.parse(
       '$serverAddress/article-apt',
     );
 
     Map data = {
-      'category': 1,
-      'title': 'jwlerjwlesk;jfslk;djrw',
-      'content': 'sdfswdljerhwelkrnjlskdjflksdjflksdjfl;ksd'
+      'category': category,
+      'title': title,
+      'content': content,
     };
     //encode Map to JSON
     var body = json.encode(data);
@@ -290,13 +305,10 @@ class NetworkSingleton {
     var response = await http.post(url,
         headers: {"Content-Type": "application/json", "Cookie": cookie},
         body: body);
-    print("${response.headers}");
-    print("${response.statusCode}");
-    print("${response.body}");
     return response;
   }
 
-  Future<http.Response> getPostingList() async {
+  Future<List<dynamic>> getPostingList() async {
     var url = Uri.parse(
       '$serverAddress/article-apt?page=1&num=20',
     );
@@ -306,15 +318,16 @@ class NetworkSingleton {
         "Cookie": cookie,
       },
     );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     String responseBody = utf8.decode(response.bodyBytes);
-    // List<dynamic> list = jsonDecode(responseBody);
-    // dynamic list = jsonDecode(responseBody);
-    // print(list[0]['nickname']);
     List<dynamic> list = jsonDecode(responseBody);
 
-    return response;
+    return _getPostingL(responseBody);
+  }
+
+  List<dynamic> _getPostingL(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed
+        .map<article_apt>((json) => article_apt.fromJson(json))
+        .toList();
   }
 }

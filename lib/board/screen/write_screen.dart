@@ -1,3 +1,5 @@
+import 'package:apart_forest/board/model/network_singleton.dart';
+import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:flutter/material.dart';
 
 class WriteScreen extends StatefulWidget {
@@ -10,13 +12,14 @@ class WriteScreen extends StatefulWidget {
 class _WriteScreenState extends State<WriteScreen> {
   List<String> dropdownList = ['1', '2', '3'];
   String selectedDropdown = '1';
-
+  final titleTextFieldController = TextEditingController();
+  final contentTextFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           // iconTheme: Icons.,
-          title: const Text('A.Fore Board - Writing'),
+          title: const Text('새 글쓰기'),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -26,7 +29,13 @@ class _WriteScreenState extends State<WriteScreen> {
           actions: <Widget>[
             MaterialButton(
               // textColor: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                NetworkSingleton().posting(1, titleTextFieldController.text,
+                    contentTextFieldController.text);
+                PostItem().reLoadPostItem_test();
+                setState(() {});
+                Navigator.pop(context);
+              },
               child: const Text(
                 "Save",
                 style: TextStyle(fontSize: 16, color: Colors.redAccent),
@@ -61,12 +70,14 @@ class _WriteScreenState extends State<WriteScreen> {
               width: double.maxFinite,
               color: Colors.blueAccent,
             ),
-            const TextField(
+            TextField(
               decoration: InputDecoration(labelText: 'Title'),
+              controller: titleTextFieldController,
               maxLines: 1,
             ),
-            const Expanded(
+            Expanded(
               child: TextField(
+                controller: contentTextFieldController,
                 decoration: InputDecoration(labelText: 'Enter Message'),
                 keyboardType: TextInputType.multiline,
                 maxLines: null,

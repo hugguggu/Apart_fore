@@ -1,6 +1,6 @@
 import 'package:apart_forest/application/auth/sign_up_form/bloc/sign_up_form_bloc.dart';
 import 'package:apart_forest/board/model/Apart_model.dart';
-import 'package:apart_forest/board/model/back_end.dart';
+import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/domain/core/value_validators.dart';
 import 'package:apart_forest/infrastructure/auth/auth_failure_or_success.dart';
 import 'package:apart_forest/pages/welcome/welcome_page.dart';

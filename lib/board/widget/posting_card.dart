@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/screen/read_screen.dart';
 // import 'package:flutter/cupertino.dart';
@@ -7,7 +8,7 @@ class postcard extends StatelessWidget {
   // const postcard({super.key});
 
   const postcard({Key key, this.post}) : super(key: key);
-  final Post post;
+  final article_apt post;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -51,14 +52,14 @@ class postcard extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      post.bodyText,
+                      post.content,
                       style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.fromLTRB(5, 10, 5, 2),
-                  child: Text(post.writer),
+                  child: Text(post.nickname.toString()),
                 ),
                 Container(
                   height: 1.0,
@@ -79,7 +80,7 @@ class postcard extends StatelessWidget {
                             size: 26,
                           ),
                           Text(
-                            post.visit.toString(),
+                            post.views.toString(),
                           ),
                           const SizedBox(
                             width: 7,
@@ -90,7 +91,7 @@ class postcard extends StatelessWidget {
                             color: Colors.black54,
                           ),
                           Text(
-                            post.visit.toString(),
+                            post.views.toString(),
                           ),
                           // const Icon(
                           //   Icons.comment,

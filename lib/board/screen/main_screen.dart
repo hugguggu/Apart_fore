@@ -1,5 +1,6 @@
-import 'package:apart_forest/board/model/back_end.dart';
+import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/screen/board_screen.dart';
+import 'package:apart_forest/board/test/mypage.dart';
 import 'package:apart_forest/board/widget/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -51,11 +52,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text('more'),
                 ),
               ),
-              Container(
-                child: Center(
-                  child: Text('etc'),
-                ),
-              ),
+              myPage(),
             ],
           ),
           bottomNavigationBar: Bottom(),

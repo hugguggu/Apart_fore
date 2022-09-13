@@ -17,7 +17,12 @@ class WelcomePage extends StatelessWidget {
             alignment: Alignment.center,
             width: 45,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                    (route) => false);
+              },
               child: Text(
                 'Skip',
                 style: TextStyle(
