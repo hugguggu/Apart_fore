@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:apart_forest/board/model/back_end.dart';
+import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/screen/main_screen.dart';
 import 'package:apart_forest/injection.dart';
 import 'package:apart_forest/pages/sign_in/sign_in_page.dart';
