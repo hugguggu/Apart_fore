@@ -32,7 +32,7 @@ class _WriteScreenState extends State<WriteScreen> {
               onPressed: () {
                 NetworkSingleton().posting(1, titleTextFieldController.text,
                     contentTextFieldController.text);
-                PostItem().reLoadPostItem_test();
+                PostItem().addLoadPostItem();
                 setState(() {});
                 Navigator.pop(context);
               },

@@ -23,7 +23,8 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadPostItem();
+    PostItem().setSetStateFunction(funcSetState);
+    PostItem().reLoadPostItem();
   }
 
   @override
@@ -94,7 +95,7 @@ class _BoardScreenState extends State<BoardScreen> {
     // monitor network fetch
     await Future.delayed(const Duration(milliseconds: 500));
     // if failed,use refreshFailed()
-    PostItem().reLoadPostItem(funcSetState);
+    PostItem().reLoadPostItem();
     // if (mounted) setState(() {});
     _refreshController.refreshCompleted();
   }
@@ -104,7 +105,7 @@ class _BoardScreenState extends State<BoardScreen> {
     await Future.delayed(const Duration(milliseconds: 500));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     // items.add((items.length + 1).toString());
-    PostItem().reLoadPostItem(funcSetState);
+    PostItem().addLoadPostItem();
     // if (mounted) setState(() {});
     _refreshController.loadComplete();
   }

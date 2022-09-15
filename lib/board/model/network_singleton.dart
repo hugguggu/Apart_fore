@@ -312,12 +312,19 @@ class NetworkSingleton {
     var url = Uri.parse(
       '$serverAddress/article-apt?page=1&num=20',
     );
-    var response = await http.get(
-      url,
-      headers: {
-        "Cookie": cookie,
-      },
-    );
+    var response;
+    try {
+      response = await http.get(
+        url,
+        headers: {
+          "Cookie": cookie,
+        },
+      );
+    } catch (e) {
+      // print(e.error);
+      return null;
+    }
+
     String responseBody = utf8.decode(response.bodyBytes);
     List<dynamic> list = jsonDecode(responseBody);
 

@@ -5,7 +5,14 @@ class UserInfo {
     return _instance;
   }
 
-  UserInfo._internal() {}
+  UserInfo._internal() {
+    id = 0;
+    nickName = '';
+    createAt = '';
+    deleteAt = '';
+    aptKaptCode = '';
+    kaptName = '';
+  }
 
   int id;
   String nickName;

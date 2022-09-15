@@ -1,4 +1,5 @@
 class article_apt {
+  int id;
   String aptKaptCode;
   int userId;
   String nickname;
@@ -12,6 +13,7 @@ class article_apt {
   String updatedAt;
 
   article_apt({
+    this.id,
     this.aptKaptCode,
     this.userId,
     this.nickname,
@@ -27,6 +29,7 @@ class article_apt {
 
   factory article_apt.fromJson(Map<String, dynamic> json) {
     return article_apt(
+      id: json['id'] as int,
       aptKaptCode: json['aptKaptCode'] as String,
       userId: json['userId'] as int,
       nickname: json['nickname'] as String,
