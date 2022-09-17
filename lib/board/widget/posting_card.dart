@@ -12,6 +12,8 @@ class postcard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // color: Colors.blue[100],
+      margin: const EdgeInsets.fromLTRB(10, 4, 10, 4),
       child: Column(
         children: <Widget>[
           InkWell(
@@ -102,7 +104,7 @@ class postcard extends StatelessWidget {
                       ),
                       Container(
                         margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: const Text('TIME'),
+                        child: Text(_getTimeText(post.updatedAt)),
                       )
                     ],
                   ),
@@ -119,6 +121,22 @@ class postcard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _getTimeText(String time) {
+  Duration diffDate = DateTime.parse(time).difference(DateTime.now());
+  diffDate = diffDate * -1;
+  if (diffDate.inDays > 0) {
+    return '${diffDate.inDays} 일전';
+  } else if (diffDate.inHours > 0) {
+    return '${diffDate.inHours} 분전';
+  } else if (diffDate.inMinutes > 0) {
+    return '${diffDate.inMinutes} 분전';
+  } else if (diffDate.inSeconds > 0) {
+    return '몇 초전';
+  } else {}
+
+  return '알수없음';
 }
 
 class _ArticleDescription extends StatelessWidget {
@@ -214,8 +232,8 @@ class CustomListItemTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: SizedBox(
+      child: Container(
+        //padding: const EdgeInsets.symmetric(vertical: 10.0),
         height: 100,
         child: InkWell(
           onTap: () {},

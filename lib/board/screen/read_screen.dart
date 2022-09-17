@@ -1,4 +1,5 @@
 import 'package:apart_forest/board/model/article_model.dart';
+import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ReadScreenState extends State<ReadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('A.Fore Board - Reading'),
+          title: Text(UserInfo().getKaptName()),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -73,31 +74,64 @@ class _ReadScreenState extends State<ReadScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
+                MaterialButton(
                   padding: const EdgeInsets.all(10),
-                  icon: const Icon(Icons.thumb_up),
-                  iconSize: 40,
                   onPressed: () {},
+                  child: Row(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.thumb_up,
+                        size: 36,
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Text('${widget.post.likes}')),
+                  ]),
                 ),
                 Container(
                   width: 1,
                   height: 10,
                   color: Colors.red,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.comment),
-                  iconSize: 40,
+                MaterialButton(
+                  padding: const EdgeInsets.all(10),
                   onPressed: () {},
+                  child: Row(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.comment,
+                        size: 36,
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Text("${widget.post.likes}")),
+                  ]),
                 ),
                 Container(
                   width: 1,
                   height: 10,
                   color: Colors.red,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  iconSize: 40,
+                MaterialButton(
+                  padding: const EdgeInsets.all(10),
                   onPressed: () {},
+                  child: Row(children: const [
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.share,
+                        size: 36,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text('공유하기'),
+                    ),
+                  ]),
                 ),
               ],
             )

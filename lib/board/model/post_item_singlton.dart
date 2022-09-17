@@ -4,7 +4,7 @@ import 'package:apart_forest/board/model/network_singleton.dart';
 class PostItem {
   static final PostItem _instance = PostItem._internal();
 
-  Function function_setstate;
+  Function _function_setstate;
 
   factory PostItem() {
     return _instance;
@@ -15,7 +15,7 @@ class PostItem {
   List<article_apt> postList = [];
 
   void setSetStateFunction(Function func) {
-    function_setstate = func;
+    _function_setstate = func;
   }
 
   List<article_apt> getPostList() {
@@ -34,8 +34,15 @@ class PostItem {
     return postList.length;
   }
 
+  List<String> getTagList() {
+    const List<String> _dropdownList = ['궁금해요', '불편해요', '칭찬해요', '나눔해요', '공유해요'];
+    return _dropdownList;
+  }
+
+  static const int itemNumPerPage = 10;
   Future<void> reLoadPostItem() async {
-    List<dynamic> list = await NetworkSingleton().getPostingList();
+    List<dynamic> list =
+        await NetworkSingleton().getPostingList(itemNumPerPage, 1);
 
     if (list == null) {
       return;
@@ -46,19 +53,23 @@ class PostItem {
       postList.add(list[i]);
     }
 
-    function_setstate();
+    _function_setstate();
   }
 
   Future<void> addLoadPostItem() async {
-    List<dynamic> list = await NetworkSingleton().getPostingList();
+    int page = PostItem().getPostItemNum() ~/ itemNumPerPage + 1;
+    List<dynamic> list =
+        await NetworkSingleton().getPostingList(itemNumPerPage, page);
 
     List<article_apt> newList = avoidDuplication(list);
 
     for (int i = 0; i < newList.length; i++) {
       postList.add(newList[i]);
     }
+    postList.sort((a, b) => b.id.compareTo(a.id));
+    // postList.reversed;
 
-    function_setstate();
+    _function_setstate();
   }
 
   List<article_apt> avoidDuplication(List<dynamic> newlist) {

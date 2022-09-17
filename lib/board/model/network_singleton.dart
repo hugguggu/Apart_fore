@@ -2,21 +2,23 @@ import 'dart:convert';
 
 import 'package:apart_forest/board/model/Apart_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
+import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 class NetworkSingleton {
-  String accessToken;
-  String refreshToken;
-  String providerUserId;
-  String cookie;
-  bool isUser;
-  bool setName;
-  bool duplicateName;
-  String aptName;
+  String _accessToken;
+  String _refreshToken;
+  String _providerUserId;
+  String _cookie;
+  bool _isUser;
+  bool _setName;
+  bool _duplicateName;
+  String _aptName;
 
-  final String serverAddress = 'http://61.77.114.199:8680';
+  final String _serverAddress = 'http://61.77.114.199:8680';
 
   static final NetworkSingleton _instance = NetworkSingleton._internal();
   factory NetworkSingleton() {
@@ -27,61 +29,61 @@ class NetworkSingleton {
   }
 
   void setAccessToken(String value) {
-    accessToken = value;
+    _accessToken = value;
   }
 
   String getAccessToken() {
-    return accessToken;
+    return _accessToken;
   }
 
   void setRefreshToken(String value) {
-    refreshToken = value;
+    _refreshToken = value;
   }
 
   String getRefreashToken() {
-    return refreshToken;
+    return _refreshToken;
   }
 
   void setProviderUserId(String value) {
-    providerUserId = value;
+    _providerUserId = value;
   }
 
   String getpProviderUserId() {
-    return providerUserId;
+    return _providerUserId;
   }
 
   void setCookie(String value) {
-    cookie = value;
+    _cookie = value;
   }
 
   String getCookie() {
-    return cookie;
+    return _cookie;
   }
 
   bool getIsUser() {
-    return isUser;
+    return _isUser;
   }
 
   bool getSetName() {
-    return setName;
+    return _setName;
   }
 
   bool getDuplicateName() {
-    return duplicateName;
+    return _duplicateName;
   }
 
   String getAptName() {
-    return aptName;
+    return _aptName;
   }
 
   Future<http.Response> signOut() async {
     var url = Uri.parse(
-      '$serverAddress/auth/signout',
+      '$_serverAddress/auth/signout',
     );
 
     var response = await http.delete(
       url,
-      headers: {"Content-Type": "application/json", "Cookie": cookie},
+      headers: {"Content-Type": "application/json", "Cookie": _cookie},
     );
 
     print("${response.headers}");
@@ -93,12 +95,12 @@ class NetworkSingleton {
 
   Future<http.Response> signDelete() async {
     var url = Uri.parse(
-      '$serverAddress/auth/delete',
+      '$_serverAddress/auth/delete',
     );
 
     var response = await http.delete(
       url,
-      headers: {"Cookie": cookie},
+      headers: {"Cookie": _cookie},
     );
 
     return response;
@@ -106,7 +108,7 @@ class NetworkSingleton {
 
   Future<http.Response> postSetNick(String nickname) async {
     var url = Uri.parse(
-      '$serverAddress/users/set-nickname',
+      '$_serverAddress/users/set-nickname',
     );
 
     Map data = {
@@ -117,7 +119,7 @@ class NetworkSingleton {
 
 // TODO : post example
     var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": cookie},
+        headers: {"Content-Type": "application/json", "Cookie": _cookie},
         body: body);
     print('Set nickname : ' + nickname);
     print("${response.headers}");
@@ -125,16 +127,16 @@ class NetworkSingleton {
     print("${response.body}");
 
     if (response.body == "OK") {
-      setName = true;
+      _setName = true;
     } else
-      setName = false;
+      _setName = false;
 
     return response;
   }
 
   Future<http.Response> postcheckNick(String nickname) async {
     var url = Uri.parse(
-      '$serverAddress/users/check-nickname',
+      '$_serverAddress/users/check-nickname',
     );
 
     Map data = {
@@ -144,7 +146,7 @@ class NetworkSingleton {
     var body = json.encode(data);
 
     var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": cookie},
+        headers: {"Content-Type": "application/json", "Cookie": _cookie},
         body: body);
     print('Check nickname : ' + nickname);
     print("${response.headers}");
@@ -152,9 +154,9 @@ class NetworkSingleton {
     print("${response.body}");
 
     if (response.body == "true") {
-      duplicateName = true;
+      _duplicateName = true;
     } else
-      duplicateName = false;
+      _duplicateName = false;
 
     return response;
   }
@@ -162,13 +164,13 @@ class NetworkSingleton {
 // 로그인 요청, receive cookie
   Future<http.Response> postSignin() async {
     var url = Uri.parse(
-      '$serverAddress/auth/signin/kakao',
+      '$_serverAddress/auth/signin/kakao',
     );
 
     Map data = {
-      'accessToken': accessToken,
-      'refreshToken': refreshToken,
-      'providerUserId': providerUserId,
+      'accessToken': _accessToken,
+      'refreshToken': _refreshToken,
+      'providerUserId': _providerUserId,
     };
     //encode Map to JSON
     var body = json.encode(data);
@@ -182,9 +184,9 @@ class NetworkSingleton {
     String cookie = response.headers['set-cookie'];
     setCookie(cookie);
 
-    NetworkSingleton().setAccessToken(accessToken);
-    NetworkSingleton().setRefreshToken(refreshToken);
-    NetworkSingleton().setProviderUserId(providerUserId);
+    NetworkSingleton().setAccessToken(_accessToken);
+    NetworkSingleton().setRefreshToken(_refreshToken);
+    NetworkSingleton().setProviderUserId(_providerUserId);
     NetworkSingleton().setCookie(cookie);
 
     return response;
@@ -203,14 +205,14 @@ class NetworkSingleton {
 
   Future<http.Response> getUsers() async {
     var url = Uri.parse(
-      '$serverAddress/users',
+      '$_serverAddress/users',
     );
     // GET
     var response = await http.get(
       url,
       headers: {
         "Content-Type": "application/json",
-        "Cookie": cookie,
+        "Cookie": _cookie,
       },
     );
     print('Response status: ${response.statusCode}');
@@ -227,9 +229,9 @@ class NetworkSingleton {
     String json_nick = json['nickname'];
 
     if (json_nick != null) {
-      isUser = true;
+      _isUser = true;
     } else {
-      isUser = false;
+      _isUser = false;
     }
 
     UserInfo().setId(json['id']);
@@ -243,7 +245,7 @@ class NetworkSingleton {
 
   Future<http.Response> postSetApart(String kaptCode) async {
     var url = Uri.parse(
-      '$serverAddress/users/set-kapt-code',
+      '$_serverAddress/users/set-kapt-code',
     );
 
     Map data = {
@@ -253,7 +255,7 @@ class NetworkSingleton {
     var body = json.encode(data);
 
     var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": cookie},
+        headers: {"Content-Type": "application/json", "Cookie": _cookie},
         body: body);
     print("${response.headers}");
     print("${response.statusCode}");
@@ -263,7 +265,7 @@ class NetworkSingleton {
 
   Future<List<Apart>> postSearchApart(String search) async {
     var url = Uri.parse(
-      '$serverAddress/apts/get-list',
+      '$_serverAddress/apts/get-list',
     );
 
     Map data = {
@@ -273,7 +275,7 @@ class NetworkSingleton {
     var body = json.encode(data);
 
     var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": cookie},
+        headers: {"Content-Type": "application/json", "Cookie": _cookie},
         body: body);
     print("${response.headers}");
     print("${response.statusCode}");
@@ -291,7 +293,7 @@ class NetworkSingleton {
   Future<http.Response> posting(
       int category, String title, String content) async {
     var url = Uri.parse(
-      '$serverAddress/article-apt',
+      '$_serverAddress/article-apt',
     );
 
     Map data = {
@@ -303,21 +305,21 @@ class NetworkSingleton {
     var body = json.encode(data);
 
     var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": cookie},
+        headers: {"Content-Type": "application/json", "Cookie": _cookie},
         body: body);
     return response;
   }
 
-  Future<List<dynamic>> getPostingList() async {
+  Future<List<dynamic>> getPostingList(int itemNumPerPage, int page) async {
     var url = Uri.parse(
-      '$serverAddress/article-apt?page=1&num=20',
+      '$_serverAddress/article-apt?page=$page&num=$itemNumPerPage',
     );
     var response;
     try {
       response = await http.get(
         url,
         headers: {
-          "Cookie": cookie,
+          "Cookie": _cookie,
         },
       );
     } catch (e) {

@@ -10,8 +10,8 @@ class WriteScreen extends StatefulWidget {
 }
 
 class _WriteScreenState extends State<WriteScreen> {
-  List<String> dropdownList = ['1', '2', '3'];
-  String selectedDropdown = '1';
+  // List<String> dropdownList = ['궁금해요', '불편해요', '칭찬해요', '나눔해요', '공유해요'];
+  int selectedDropdown = 0;
   final titleTextFieldController = TextEditingController();
   final contentTextFieldController = TextEditingController();
   @override
@@ -33,7 +33,6 @@ class _WriteScreenState extends State<WriteScreen> {
                 NetworkSingleton().posting(1, titleTextFieldController.text,
                     contentTextFieldController.text);
                 PostItem().addLoadPostItem();
-                setState(() {});
                 Navigator.pop(context);
               },
               child: const Text(
@@ -51,7 +50,7 @@ class _WriteScreenState extends State<WriteScreen> {
               children: [
                 DropdownButton(
                   value: selectedDropdown,
-                  items: dropdownList.map((String item) {
+                  items: PostItem().getTagList().map((String item) {
                     return DropdownMenuItem<String>(
                       child: Text('$item'),
                       value: item,
@@ -59,7 +58,8 @@ class _WriteScreenState extends State<WriteScreen> {
                   }).toList(),
                   onChanged: (dynamic value) {
                     setState(() {
-                      selectedDropdown = value;
+                      // selectedDropdown = value;
+                      selectedDropdown = PostItem().getTagList().indexOf(value);
                     });
                   },
                 ),
