@@ -5,7 +5,14 @@ class PostItem {
   static final PostItem _instance = PostItem._internal();
 
   Function _function_setstate;
-
+  final List<String> _dropdownList = [
+    '카테고리',
+    '궁금해요',
+    '불편해요',
+    '칭찬해요',
+    '나눔해요',
+    '공유해요'
+  ];
   factory PostItem() {
     return _instance;
   }
@@ -34,8 +41,7 @@ class PostItem {
     return postList.length;
   }
 
-  List<String> getTagList() {
-    const List<String> _dropdownList = ['궁금해요', '불편해요', '칭찬해요', '나눔해요', '공유해요'];
+  List<String> getCategoryList() {
     return _dropdownList;
   }
 

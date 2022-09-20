@@ -1,16 +1,16 @@
 class article_apt {
-  int id;
-  String aptKaptCode;
-  int userId;
-  String nickname;
-  int category;
-  String title;
-  String content;
-  int views;
-  String likes;
-  bool iLike;
-  String createdAt;
-  String updatedAt;
+  int id = 0;
+  String aptKaptCode = '';
+  int userId = 0;
+  String nickname = '';
+  int category = 0;
+  String title = '';
+  String content = '';
+  int views = 0;
+  String likes = '0';
+  String iLike = null;
+  String createdAt = '';
+  String updatedAt = '';
 
   article_apt({
     this.id,
@@ -38,7 +38,7 @@ class article_apt {
       content: json['content'] as String,
       views: json['views'] as int,
       likes: json['likes'] as String,
-      iLike: json['iLike'] as bool,
+      iLike: json['iLike'] as String,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
     );

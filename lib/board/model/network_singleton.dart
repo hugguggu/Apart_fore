@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:apart_forest/board/model/Apart_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
-import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +16,9 @@ class NetworkSingleton {
   bool _duplicateName;
   String _aptName;
 
-  final String _serverAddress = 'http://61.77.114.199:8680';
+  // final String _serverAddress = 'http://61.77.114.199:8680';
+  // final String _serverAddress = 'https://test.melius0.shop';
+  final String _serverAddress = 'http://test.melius0.shop:8680';
 
   static final NetworkSingleton _instance = NetworkSingleton._internal();
   factory NetworkSingleton() {
@@ -128,8 +128,9 @@ class NetworkSingleton {
 
     if (response.body == "OK") {
       _setName = true;
-    } else
+    } else {
       _setName = false;
+    }
 
     return response;
   }
@@ -155,8 +156,9 @@ class NetworkSingleton {
 
     if (response.body == "true") {
       _duplicateName = true;
-    } else
+    } else {
       _duplicateName = false;
+    }
 
     return response;
   }
@@ -338,5 +340,49 @@ class NetworkSingleton {
     return parsed
         .map<article_apt>((json) => article_apt.fromJson(json))
         .toList();
+  }
+
+  // Future<Map<String, dynamic>> getArticleDetail(int id) async {
+  Future<article_apt> getArticleDetail(int id) async {
+    var url = Uri.parse(
+      '$_serverAddress/article-apt/$id',
+    );
+    http.Response response;
+    try {
+      response = await http.get(
+        url,
+        headers: {
+          "Cookie": _cookie,
+        },
+      );
+    } catch (e) {
+      // print(e.error);
+      return null;
+    }
+    // String responseBody = utf8.decode(response.bodyBytes);
+    Map<String, dynamic> data = json.decode(response.body);
+
+    return article_apt.fromJson(data);
+  }
+
+  Future<http.Response> checkLike(int articleID) async {
+    var url = Uri.parse(
+      '$_serverAddress/article-apt/like/$articleID',
+    );
+
+    var response = await http.post(url, headers: {"Cookie": _cookie});
+    return response;
+  }
+
+  Future<http.Response> deleteLike(int articleID) async {
+    var url = Uri.parse(
+      '$_serverAddress/article-apt/like/$articleID',
+    );
+
+    var response = await http.delete(
+      url,
+      headers: {"Cookie": _cookie},
+    );
+    return response;
   }
 }

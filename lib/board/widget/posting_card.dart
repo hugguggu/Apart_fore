@@ -1,8 +1,10 @@
 import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/model_post.dart';
+import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/screen/read_screen.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:apart_forest/board/model/post_item_singlton.dart';
 
 class postcard extends StatelessWidget {
   // const postcard({super.key});
@@ -19,7 +21,7 @@ class postcard extends StatelessWidget {
           InkWell(
             onTap: () {
               Navigator.of(context).push(
-                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                  MaterialPageRoute<void>(builder: (BuildContext context) {
                 return ReadScreen(
                   post: post,
                 );
@@ -30,9 +32,9 @@ class postcard extends StatelessWidget {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                  child: const Text(
-                    'TAG',
-                    style: TextStyle(
+                  child: Text(
+                    PostItem().getCategoryList()[post.category],
+                    style: const TextStyle(
                       fontSize: 18,
                     ),
                   ),
@@ -55,6 +57,7 @@ class postcard extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       post.content,
+                      maxLines: 2,
                       style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
@@ -93,7 +96,7 @@ class postcard extends StatelessWidget {
                             color: Colors.black54,
                           ),
                           Text(
-                            post.views.toString(),
+                            post.likes.toString(),
                           ),
                           // const Icon(
                           //   Icons.comment,
@@ -129,7 +132,7 @@ String _getTimeText(String time) {
   if (diffDate.inDays > 0) {
     return '${diffDate.inDays} 일전';
   } else if (diffDate.inHours > 0) {
-    return '${diffDate.inHours} 분전';
+    return '${diffDate.inHours} 시간전';
   } else if (diffDate.inMinutes > 0) {
     return '${diffDate.inMinutes} 분전';
   } else if (diffDate.inSeconds > 0) {

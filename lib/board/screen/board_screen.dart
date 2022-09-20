@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
@@ -79,7 +76,6 @@ class _BoardScreenState extends State<BoardScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your onPressed code here!
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => WriteScreen()),
