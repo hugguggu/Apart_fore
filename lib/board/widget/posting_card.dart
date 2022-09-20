@@ -107,7 +107,7 @@ class postcard extends StatelessWidget {
                       ),
                       Container(
                         margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Text(_getTimeText(post.updatedAt)),
+                        child: Text(_getTimeText(post.createdAt)),
                       )
                     ],
                   ),
