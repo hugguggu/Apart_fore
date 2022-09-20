@@ -30,7 +30,9 @@ class _WriteScreenState extends State<WriteScreen> {
             MaterialButton(
               // textColor: Colors.white,
               onPressed: () {
-                NetworkSingleton().posting(1, titleTextFieldController.text,
+                NetworkSingleton().posting(
+                    selectedDropdown,
+                    titleTextFieldController.text,
                     contentTextFieldController.text);
                 PostItem().addLoadPostItem();
                 Navigator.pop(context);
@@ -49,17 +51,18 @@ class _WriteScreenState extends State<WriteScreen> {
             Row(
               children: [
                 DropdownButton(
-                  value: selectedDropdown,
-                  items: PostItem().getTagList().map((String item) {
+                  value: PostItem().getCategoryList()[selectedDropdown],
+                  items: PostItem().getCategoryList().map((String item) {
                     return DropdownMenuItem<String>(
-                      child: Text('$item'),
                       value: item,
+                      child: Text(item),
                     );
                   }).toList(),
                   onChanged: (dynamic value) {
                     setState(() {
                       // selectedDropdown = value;
-                      selectedDropdown = PostItem().getTagList().indexOf(value);
+                      selectedDropdown =
+                          PostItem().getCategoryList().indexOf(value);
                     });
                   },
                 ),
@@ -71,14 +74,14 @@ class _WriteScreenState extends State<WriteScreen> {
               color: Colors.blueAccent,
             ),
             TextField(
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: '제목을 입력하세요'),
               controller: titleTextFieldController,
               maxLines: 1,
             ),
             Expanded(
               child: TextField(
                 controller: contentTextFieldController,
-                decoration: InputDecoration(labelText: 'Enter Message'),
+                decoration: const InputDecoration(labelText: '내용을 입력하세요'),
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 expands: true, // <-- SEE HERE
