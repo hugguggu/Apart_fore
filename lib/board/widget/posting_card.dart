@@ -2,7 +2,7 @@ import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/screen/read_screen.dart';
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 
@@ -32,7 +32,8 @@ class postcard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
+                // 카테고리 부분
+                Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                   child: Text(
                     PostItem().getCategoryList()[post.category],
@@ -41,7 +42,8 @@ class postcard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
+                // 제목 부분
+                Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -50,37 +52,46 @@ class postcard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 26,
                       ),
+                      maxLines: 1,
                     ),
                   ),
                 ),
-                Container(
+                // 미리보기 부분
+                Padding(
                   padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       post.content,
                       maxLines: 2,
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      // style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(5, 10, 5, 2),
-                  child: Text(post.nickname.toString()),
+                // 작성자
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    post.nickname.toString(),
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
                 ),
                 Container(
                   height: 1.0,
                   width: double.maxFinite,
                   color: Colors.blueAccent,
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(5, 5, 5, 2),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                          ),
                           const Icon(
                             Icons.visibility,
                             color: Colors.black54,
@@ -89,26 +100,34 @@ class postcard extends StatelessWidget {
                           Text(
                             post.views.toString(),
                           ),
-                          const SizedBox(
-                            width: 7,
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                           ),
-                          const Icon(
-                            Icons.thumb_up,
+                          Icon(
+                            post.iLike == null
+                                ? Icons.favorite_outline
+                                : Icons.favorite,
                             size: 26,
-                            color: Colors.black54,
+                            color: post.iLike == null
+                                ? Colors.black54
+                                : Colors.red,
                           ),
                           Text(
                             post.likes.toString(),
                           ),
-                          // const Icon(
-                          //   Icons.comment,
-                          //   size: 26,
-                          // ),
-                          // Text(post.viewer.toString()),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          ),
+                          const Icon(
+                            Icons.comment_outlined,
+                            color: Colors.black54,
+                            size: 26,
+                          ),
+                          Text(post.likes.toString()),
                         ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         child: Text(_getTimeText(post.createdAt)),
                       )
                     ],

@@ -125,8 +125,11 @@ class _ReadScreenState extends State<ReadScreen> {
                     padding: const EdgeInsets.all(5),
                     child: Icon(
                       widget.post.iLike == null
-                          ? Icons.thumb_up_outlined
-                          : Icons.thumb_up,
+                          ? Icons.favorite_border
+                          : Icons.favorite,
+                      color: widget.post.iLike == null
+                          ? Colors.black45
+                          : Colors.red,
                       size: 36,
                     ),
                   ),
