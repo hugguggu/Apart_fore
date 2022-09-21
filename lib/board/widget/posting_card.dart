@@ -19,11 +19,13 @@ class postcard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           InkWell(
-            onTap: () {
+            onTap: () async {
+              article_apt _postDetail =
+                  await NetworkSingleton().getArticleDetail(post.id);
               Navigator.of(context).push(
                   MaterialPageRoute<void>(builder: (BuildContext context) {
                 return ReadScreen(
-                  post: post,
+                  post: _postDetail,
                 );
               }));
             },
