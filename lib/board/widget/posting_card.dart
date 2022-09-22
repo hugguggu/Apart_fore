@@ -20,12 +20,12 @@ class postcard extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () async {
-              article_apt _postDetail =
-                  await NetworkSingleton().getArticleDetail(post.id);
+              NetworkSingleton().addViewNumber(post.id);
+
               Navigator.of(context).push(
                   MaterialPageRoute<void>(builder: (BuildContext context) {
                 return ReadScreen(
-                  post: _postDetail,
+                  post: post,
                 );
               }));
             },
@@ -101,7 +101,7 @@ class postcard extends StatelessWidget {
                             post.views.toString(),
                           ),
                           const Padding(
-                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                           ),
                           Icon(
                             post.iLike == null
@@ -116,7 +116,7 @@ class postcard extends StatelessWidget {
                             post.likes.toString(),
                           ),
                           const Padding(
-                            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                           ),
                           const Icon(
                             Icons.comment_outlined,

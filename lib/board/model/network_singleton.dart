@@ -361,7 +361,6 @@ class NetworkSingleton {
     }
     // String responseBody = utf8.decode(response.bodyBytes);
     Map<String, dynamic> data = json.decode(response.body);
-
     return article_apt.fromJson(data);
   }
 
@@ -383,6 +382,28 @@ class NetworkSingleton {
       url,
       headers: {"Cookie": _cookie},
     );
+
+    return response;
+  }
+
+  Future<http.Response> addViewNumber(int articleID) async {
+    var url = Uri.parse(
+      '$_serverAddress/article-apt/views/$articleID',
+    );
+
+    var response;
+    try {
+      response = await http.put(
+        url,
+        headers: {
+          "Cookie": _cookie,
+        },
+      );
+    } catch (e) {
+      // print(e.error);
+      return null;
+    }
+
     return response;
   }
 }
