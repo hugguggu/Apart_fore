@@ -43,7 +43,12 @@ class _ReadScreenState extends State<ReadScreen> {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WriteScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => WriteScreen(
+                                category_modify: widget.post.category,
+                                title_modify: widget.post.title,
+                                content_modify: widget.post.content,
+                              )),
                     );
                   },
                   child: const Text(

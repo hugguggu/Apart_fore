@@ -3,7 +3,13 @@ import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:flutter/material.dart';
 
 class WriteScreen extends StatefulWidget {
-  // const WriteScreen({super.key});
+  final int category_modify;
+  final String title_modify;
+  final String content_modify;
+
+  const WriteScreen(
+      {Key key, this.category_modify, this.title_modify, this.content_modify})
+      : super(key: key);
 
   @override
   State<WriteScreen> createState() => _WriteScreenState();
@@ -16,6 +22,11 @@ class _WriteScreenState extends State<WriteScreen> {
   final contentTextFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    if (widget.title_modify.isNotEmpty || widget.content_modify.isNotEmpty) {
+      selectedDropdown = widget.category_modify;
+      titleTextFieldController.text = widget.title_modify;
+      contentTextFieldController.text = widget.content_modify;
+    }
     return Scaffold(
         appBar: AppBar(
           // iconTheme: Icons.,
