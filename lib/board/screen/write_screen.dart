@@ -22,7 +22,9 @@ class _WriteScreenState extends State<WriteScreen> {
   final contentTextFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    if (widget.title_modify.isNotEmpty || widget.content_modify.isNotEmpty) {
+    if (widget.category_modify != null &&
+        widget.title_modify != null &&
+        widget.content_modify != null) {
       selectedDropdown = widget.category_modify;
       titleTextFieldController.text = widget.title_modify;
       contentTextFieldController.text = widget.content_modify;
