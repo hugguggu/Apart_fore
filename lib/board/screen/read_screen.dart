@@ -2,6 +2,7 @@ import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
+import 'package:apart_forest/board/screen/write_screen.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
@@ -34,6 +35,24 @@ class _ReadScreenState extends State<ReadScreen> {
           },
           icon: const Icon(Icons.backspace),
         ),
+        actions: UserInfo().getId() != widget.post.userId
+            ? null
+            : <Widget>[
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WriteScreen()),
+                    );
+                  },
+                  child: const Text(
+                    "수정",
+                    style: TextStyle(fontSize: 16, color: Colors.redAccent),
+                  ),
+                  // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+                ),
+              ],
       ),
       body: FutureBuilder(
           future: _getArticleDetail(),
@@ -41,55 +60,80 @@ class _ReadScreenState extends State<ReadScreen> {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
               case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               default:
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row(
-                    //   children: [
-                    //     // DropdownButton(
-                    //     //   value: PostItem().getTagList()[widget.post.category],
-                    //     //   items: PostItem().getTagList().map((String item) {
-                    //     //     return DropdownMenuItem<String>(
-                    //     //       child: Text('$item'),
-                    //     //       value: item,
-                    //     //       enabled: false,
-                    //     //     );
-                    //     //   }).toList(),
-                    //     //   onChanged: (dynamic value) {
-                    //     //     setState(() {
-                    //     //       selectedDropdown = value;
-                    //     //     });
-                    //     //   },
-                    //     // ),
-                    //   ],
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            PostItem()
+                                .getCategoryList()[_postDetail.category]
+                                .toString(),
+                            style: const TextStyle(
+                              fontSize: 24,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _postDetail.title,
+                              style: const TextStyle(
+                                fontSize: 32,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _postDetail.nickname,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                PostItem().getTimeText(_postDetail.updatedAt),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // TextField(
+                    //   // controller: _titleController,
+                    //   controller: TextEditingController(
+                    //       text: PostItem()
+                    //           // .getCategoryList()[widget.post.category]
+                    //           .getCategoryList()[_postDetail.category]
+                    //           .toString()),
+                    //   decoration: const InputDecoration(labelText: 'Category'),
+                    //   enabled: false,
+                    //   maxLines: 1,
                     // ),
-                    TextField(
-                      // controller: _titleController,
-                      controller: TextEditingController(
-                          text: PostItem()
-                              // .getCategoryList()[widget.post.category]
-                              .getCategoryList()[_postDetail.category]
-                              .toString()),
-                      decoration: const InputDecoration(labelText: 'Category'),
-                      enabled: false,
-                      maxLines: 1,
-                    ),
-                    Container(
-                      height: 1.0,
-                      width: double.maxFinite,
-                      color: Colors.blue[100],
-                    ),
-                    TextField(
-                      // controller: _titleController,
-                      controller:
-                          // TextEditingController(text: widget.post.title),
-                          TextEditingController(text: _postDetail.title),
-                      // decoration: const InputDecoration(labelText: 'Title'),
-                      enabled: false,
-                      maxLines: 1,
-                    ),
+                    // Container(
+                    //   height: 1.0,
+                    //   width: double.maxFinite,
+                    //   color: Colors.blue[100],
+                    // ),
+                    // TextField(
+                    //   // controller: _titleController,
+                    //   controller:
+                    //       // TextEditingController(text: widget.post.title),
+                    //       TextEditingController(text: _postDetail.title),
+                    //   // decoration: const InputDecoration(labelText: 'Title'),
+                    //   enabled: false,
+                    //   maxLines: 1,
+                    // ),
                     Container(
                       height: 1.0,
                       width: double.maxFinite,
@@ -100,7 +144,7 @@ class _ReadScreenState extends State<ReadScreen> {
                         controller:
                             //  TextEditingController(text: widget.post.content),
                             TextEditingController(text: _postDetail.content),
-                        decoration: const InputDecoration(labelText: 'Message'),
+                        // decoration: const InputDecoration(labelText: 'Message'),
                         // controller: TextEditingController().text = 'dsfsd',
                         maxLines: null,
                         expands: true, // <-- SEE HERE

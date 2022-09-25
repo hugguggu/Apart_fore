@@ -2,7 +2,6 @@ import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/model_post.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/screen/read_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 
@@ -128,7 +127,7 @@ class postcard extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        child: Text(_getTimeText(post.createdAt)),
+                        child: Text(PostItem().getTimeText(post.updatedAt)),
                       )
                     ],
                   ),
@@ -145,22 +144,6 @@ class postcard extends StatelessWidget {
       ),
     );
   }
-}
-
-String _getTimeText(String time) {
-  Duration diffDate = DateTime.parse(time).difference(DateTime.now());
-  diffDate = diffDate * -1;
-  if (diffDate.inDays > 0) {
-    return '${diffDate.inDays} 일전';
-  } else if (diffDate.inHours > 0) {
-    return '${diffDate.inHours} 시간전';
-  } else if (diffDate.inMinutes > 0) {
-    return '${diffDate.inMinutes} 분전';
-  } else if (diffDate.inSeconds > 0) {
-    return '몇 초전';
-  } else {}
-
-  return '알수없음';
 }
 
 class _ArticleDescription extends StatelessWidget {

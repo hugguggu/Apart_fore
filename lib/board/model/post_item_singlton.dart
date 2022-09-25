@@ -96,4 +96,20 @@ class PostItem {
     }
     return res;
   }
+
+  String getTimeText(String time) {
+    Duration diffDate = DateTime.parse(time).difference(DateTime.now());
+    diffDate = diffDate * -1;
+    if (diffDate.inDays > 0) {
+      return '${diffDate.inDays} 일전';
+    } else if (diffDate.inHours > 0) {
+      return '${diffDate.inHours} 시간전';
+    } else if (diffDate.inMinutes > 0) {
+      return '${diffDate.inMinutes} 분전';
+    } else if (diffDate.inSeconds > 0) {
+      return '몇 초전';
+    } else {}
+
+    return '알수없음';
+  }
 }
