@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
@@ -16,6 +18,7 @@ class ReadScreen extends StatefulWidget {
 
 class _ReadScreenState extends State<ReadScreen> {
   article_apt _postDetail;
+  StreamController<bool> _iLikeSteamCtrl = StreamController<bool>();
   // bool _iLike;
 
   @override
@@ -164,45 +167,54 @@ class _ReadScreenState extends State<ReadScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InkWell(
-                          onTap: () async {
-                            if (_postDetail.iLike == null) {
-                              await NetworkSingleton()
-                                  .checkLike(_postDetail.id);
-                              _postDetail.likes =
-                                  (int.parse(_postDetail.likes) + 1).toString();
-                            } else {
-                              await NetworkSingleton()
-                                  .deleteLike(_postDetail.id);
-                              _postDetail.likes =
-                                  (int.parse(_postDetail.likes) - 1).toString();
-                            }
-
-                            // Future.delayed(const Duration(milliseconds: 3000));
-                            setState(() {});
-                          },
-                          child: MaterialButton(
-                            padding: const EdgeInsets.all(10),
-                            // onPressed: () {},
-                            child: Row(children: [
-                              Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Icon(
-                                  _postDetail.iLike == null
-                                      ? Icons.favorite_border
-                                      : Icons.favorite,
-                                  color: _postDetail.iLike == null
-                                      ? Colors.black45
-                                      : Colors.red,
-                                  size: 36,
-                                ),
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Text(_postDetail.likes)),
-                            ]),
-                          ),
-                        ),
+                        StreamBuilder<Object>(
+                            stream: _iLikeSteamCtrl.stream,
+                            builder: (context, snapshot) {
+                              return MaterialButton(
+                                onPressed: () async {
+                                  _iLikeSteamCtrl.onPause;
+                                  if (snapshot.data == false) {
+                                    await NetworkSingleton()
+                                        .checkLike(_postDetail.id);
+                                    _iLikeSteamCtrl.add(true);
+                                    _postDetail.likes =
+                                        (int.parse(_postDetail.likes) + 1)
+                                            .toString();
+                                  } else {
+                                    await NetworkSingleton()
+                                        .deleteLike(_postDetail.id);
+                                    _iLikeSteamCtrl.add(false);
+                                    _postDetail.likes =
+                                        (int.parse(_postDetail.likes) - 1)
+                                            .toString();
+                                  }
+                                  _iLikeSteamCtrl.onListen;
+                                  // Future.delayed(const Duration(milliseconds: 3000));
+                                  // setState(() {});
+                                },
+                                padding: const EdgeInsets.all(10),
+                                // onPressed: () {},
+                                child: Row(children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Icon(
+                                      // _postDetail.iLike == null
+                                      snapshot.data == false
+                                          ? Icons.favorite_border
+                                          : Icons.favorite,
+                                      // color: _postDetail.iLike == null
+                                      color: snapshot.data == false
+                                          ? Colors.black45
+                                          : Colors.red,
+                                      size: 36,
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Text(_postDetail.likes)),
+                                ]),
+                              );
+                            }),
                         Container(
                           width: 1,
                           height: 10,
@@ -258,6 +270,6 @@ class _ReadScreenState extends State<ReadScreen> {
   Future<void> _getArticleDetail() async {
     _postDetail = await NetworkSingleton().getArticleDetail(widget.post.id);
     // _postDetail = await NetworkSingleton().getArticleDetail();
-    // _iLike = _postDetail.iLike == null ? false : true;
+    _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
   }
 }
