@@ -44,25 +44,38 @@ class postcard extends StatelessWidget {
                 // 제목 부분
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      post.title,
-                      style: const TextStyle(
-                        fontSize: 26,
-                      ),
+                  child: Flexible(
+                    // alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                          text: post.title,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            // height: 1.4,
+                            fontSize: 24.0,
+                          )),
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
                 // 미리보기 부분
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      post.content,
+                  child: Flexible(
+                    // alignment: Alignment.centerLeft,
+                    child: RichText(
+                      // text: TextSpan(text: post.content),
+                      text: TextSpan(
+                          text: post.content,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            // height: 1.4,
+                            fontSize: 16.0,
+                          )),
+
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       // style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
