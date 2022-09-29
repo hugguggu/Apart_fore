@@ -37,7 +37,7 @@ class postcard extends StatelessWidget {
                   child: Text(
                     PostItem().getCategoryList()[post.category],
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                 ),

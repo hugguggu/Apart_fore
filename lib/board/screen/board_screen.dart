@@ -1,6 +1,7 @@
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
+import 'package:apart_forest/board/widget/news_carousel.dart';
 import 'package:apart_forest/board/widget/posting_card.dart';
 import 'package:apart_forest/board/widget/search_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -68,9 +69,13 @@ class _BoardScreenState extends State<BoardScreen> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: ListView.builder(
-          itemBuilder: (c, i) => postcard(post: PostItem().getPostItembyIdx(i)),
+          itemBuilder: (c, i) {
+            return i == 0
+                ? NewsCarouselWidget()
+                : postcard(post: PostItem().getPostItembyIdx(i - 1));
+          },
           // itemExtent: 100.0,
-          itemCount: PostItem().getPostItemNum(),
+          itemCount: PostItem().getPostItemNum() + 1,
         ),
       ),
       floatingActionButton: FloatingActionButton(
