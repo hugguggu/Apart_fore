@@ -33,6 +33,8 @@ Future<void> main() async {
   // await Messages.delegate.load(locale);
   Firebase.initializeApp().whenComplete(() {});
   KakaoSdk.init(nativeAppKey: 'beab66ed5facd342394656e8af2684f6');
+  HttpOverrides.global =
+      NoCheckCertificateHttpOverrides(); // 생성된 HttpOverrides 객체 등록
   configureDependencies();
   runApp(const MyApp());
 }

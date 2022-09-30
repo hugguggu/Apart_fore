@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:apart_forest/board/model/Apart_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
@@ -6,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-class NetworkSingleton {
+class NetworkSingleton extends HttpOverrides {
   String _accessToken;
   String _refreshToken;
   String _providerUserId;
@@ -16,9 +17,16 @@ class NetworkSingleton {
   bool _duplicateName;
   String _aptName;
 
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+
   // final String _serverAddress = 'http://61.77.114.199:8680';
-  // final String _serverAddress = 'https://test.melius0.shop';
-  final String _serverAddress = 'http://test.melius0.shop:8680';
+  final String _serverAddress = 'https://test.melius0.shop';
+  // final String _serverAddress = 'http://test.melius0.shop:8680';
 
   static final NetworkSingleton _instance = NetworkSingleton._internal();
   factory NetworkSingleton() {
@@ -345,6 +353,7 @@ class NetworkSingleton {
   // Future<Map<String, dynamic>> getArticleDetail(int id) async {
   Future<article_apt> getArticleDetail(int id) async {
     var url = Uri.parse(
+      // '$_serverAddress/article-apt/$id',
       '$_serverAddress/article-apt/$id',
     );
     http.Response response;
@@ -405,5 +414,14 @@ class NetworkSingleton {
     }
 
     return response;
+  }
+}
+
+class NoCheckCertificateHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
