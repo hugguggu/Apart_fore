@@ -202,6 +202,32 @@ class NetworkSingleton extends HttpOverrides {
     return response;
   }
 
+  Future<http.Response> getSession() async {
+    var url = Uri.parse(
+      '$_serverAddress/auth/session',
+    );
+    http.Response response;
+    try {
+      response = await http.get(
+        url,
+        headers: {
+          "Cookie": _cookie,
+        },
+      );
+    } catch (e) {
+      // print(e.error);
+      return null;
+    }
+
+    print("***  Headers ****" + "${response.headers}");
+    print("***  statusCode ****" + "${response.statusCode}");
+    print("***  body ****" + "${response.body}");
+
+    String responseBody = utf8.decode(response.bodyBytes);
+    // Map<String, dynamic> data = json.decode(response.body);
+    return response;
+  }
+
   Future<AccessTokenInfo> get_user_access_token() async {
     try {
       AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
@@ -275,7 +301,7 @@ class NetworkSingleton extends HttpOverrides {
 
   Future<List<Apart>> postSearchApart(String search) async {
     var url = Uri.parse(
-      '$_serverAddress/apts/get-list',
+      '$_serverAddress/apts/search',
     );
 
     Map data = {
