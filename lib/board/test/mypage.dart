@@ -1,5 +1,6 @@
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
+import 'package:apart_forest/main.dart';
 import 'package:flutter/material.dart';
 
 class myPage extends StatelessWidget {
@@ -22,9 +23,16 @@ class myPage extends StatelessWidget {
         ),
         actions: <Widget>[
           IconButton(
+              icon: Icon(Icons.block),
+              onPressed: () {
+                _showdLeaveDialog(context)
+                    .then((value) => (value) ? Navigator.pop(context) : null);
+              }),
+          IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                NetworkSingleton().signOut();
+                _showdLogoutDialog(context)
+                    .then((value) => (value) ? Navigator.pop(context) : null);
               }),
         ],
       ),
@@ -428,6 +436,60 @@ class myPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<dynamic> _showdLeaveDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('탈퇴를 하면 모든 정보가 삭제됩니다.\n정말 탈퇴 하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+            child: const Text('확인'),
+            onPressed: () {
+              NetworkSingleton().signDelete();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return StartPage();
+                  }));
+            },
+          ),
+          ElevatedButton(
+            child: const Text('취소'),
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> _showdLogoutDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('로그아웃 하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+            child: const Text('확인'),
+            onPressed: () {
+              NetworkSingleton().signOut();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return StartPage();
+                  }));
+            },
+          ),
+          ElevatedButton(
+            child: const Text('취소'),
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+          ),
+        ],
       ),
     );
   }

@@ -15,6 +15,7 @@ class NetworkSingleton extends HttpOverrides {
   bool _isUser;
   bool _setName;
   bool _duplicateName;
+  bool _isFirst;
   String _aptName;
 
   @override
@@ -78,6 +79,10 @@ class NetworkSingleton extends HttpOverrides {
 
   bool getDuplicateName() {
     return _duplicateName;
+  }
+
+  bool getFirstLogin() {
+    return _isFirst;
   }
 
   String getAptName() {
@@ -190,6 +195,16 @@ class NetworkSingleton extends HttpOverrides {
     print("${response.headers}");
     print("${response.statusCode}");
     print("${response.body}");
+
+    String responseBody = utf8.decode(response.bodyBytes);
+
+    Map<String, dynamic> resjson = jsonDecode(responseBody);
+
+    if (resjson['status'] == 100) {
+      _isFirst = false;
+    } else {
+      _isUser = true;
+    }
 
     String cookie = response.headers['set-cookie'];
     setCookie(cookie);
@@ -364,7 +379,7 @@ class NetworkSingleton extends HttpOverrides {
     }
 
     String responseBody = utf8.decode(response.bodyBytes);
-    List<dynamic> list = jsonDecode(responseBody);
+//    List<dynamic> list = jsonDecode(responseBody);
 
     return _getPostingL(responseBody);
   }

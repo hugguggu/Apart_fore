@@ -183,7 +183,11 @@ class StartPage extends StatelessWidget {
                     if (isKakaoLogin) {
                       // 카카오톡 - 아숲 연동 완료
                       if (NetworkSingleton().getIsUser()) {
-                        return WelcomePage(); // 카카오톡 - 아숲 회원가입
+                        if(NetworkSingleton().getFirstLogin()){
+                          return WelcomePage(); // 카카오톡 - 아숲 회원가입
+                        }else{
+                          return MainScreen();
+                        }
                       } else {
                         return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
                       }
@@ -196,7 +200,7 @@ class StartPage extends StatelessWidget {
                   ]),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               /*
@@ -241,7 +245,7 @@ class StartPage extends StatelessWidget {
                 color: Color(0xff347af0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Color(0xff347af0),
                   ),
                 ),
@@ -249,7 +253,7 @@ class StartPage extends StatelessWidget {
                   width: 240,
                   height: 40,
                   alignment: Alignment.center,
-                  child: Text(
+                  child: const Text(
                     '게시판 테스트 페이지 (삭제예정)',
                     style: TextStyle(
                       color: Colors.white,
