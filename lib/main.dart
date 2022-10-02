@@ -96,99 +96,8 @@ class StartPage extends StatelessWidget {
                 height: 20,
               ),
               InkWell(
-                onTap: () async {
-                  void checkKakao() async {
-                    if (await isKakaoTalkInstalled()) {
-                      try {
-                        OAuthToken token =
-                            await UserApi.instance.loginWithKakaoTalk();
-                        isKakaoLogin = true;
-                        print('카카오톡으로 로그인 성공');
-                        print('accessToken : ');
-                        print(token.accessToken);
-                        // g_accessToken = token.accessToken;
-                        NetworkSingleton().setAccessToken(token.accessToken);
-                        print('refreshToken : ');
-                        print(token.refreshToken);
-                        // g_refreshToken = token.refreshToken;
-                        NetworkSingleton().setRefreshToken(token.refreshToken);
-
-                        User user = await UserApi.instance.me();
-                        // g_providerUserId = user.id.toString();
-                        NetworkSingleton()
-                            .setProviderUserId(user.id.toString());
-                        print('providerUserId : ');
-                        print(NetworkSingleton().getpProviderUserId());
-                      } catch (error) {
-                        print('카카오톡으로 로그인 실패 $error');
-                        isKakaoLogin = false;
-                        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-                        try {
-                          OAuthToken token =
-                              await UserApi.instance.loginWithKakaoAccount();
-                          isKakaoLogin = true;
-                          print('카카오계정으로 로그인 성공');
-                          print('accessToken : ');
-                          print(token.accessToken);
-                          // g_accessToken = token.accessToken;
-                          NetworkSingleton().setAccessToken(token.accessToken);
-                          print('refreshToken : ');
-                          print(token.refreshToken);
-                          NetworkSingleton()
-                              .setRefreshToken(token.refreshToken);
-
-                          User user = await UserApi.instance.me();
-                          NetworkSingleton()
-                              .setProviderUserId(user.id.toString());
-                          print('providerUserId : ');
-                          print(NetworkSingleton().getpProviderUserId());
-                        } catch (error) {
-                          print('카카오계정으로 로그인 실패 $error');
-                          isKakaoLogin = false;
-                        }
-                      }
-                    } else {
-                      try {
-                        OAuthToken token =
-                            await UserApi.instance.loginWithKakaoAccount();
-                        print('카카오계정으로 로그인 성공');
-                        print('accessToken : ');
-                        print(token.accessToken);
-                        NetworkSingleton().setAccessToken(token.accessToken);
-                        print('refreshToken : ');
-                        print(token.refreshToken);
-                        NetworkSingleton().setRefreshToken(token.refreshToken);
-
-                        User user = await UserApi.instance.me();
-                        NetworkSingleton()
-                            .setProviderUserId(user.id.toString());
-                        print('providerUserId : ');
-                        print(NetworkSingleton().getpProviderUserId());
-                        isKakaoLogin = true;
-                      } catch (error) {
-                        print('카카오계정으로 로그인 실패 $error');
-                        isKakaoLogin = false;
-                      }
-                    }
-                  }
-
-                  await checkKakao();
-
-                  if (isKakaoLogin) {
-                    // await signDel();
-                    await NetworkSingleton().postSignin();
-                    await NetworkSingleton().getUsers();
-                  }
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    if (isKakaoLogin) {
-                      // 카카오톡 - 아숲 연동 완료
-                      if (NetworkSingleton().getIsUser()) {
-                        return WelcomePage(); // 카카오톡 - 아숲 회원가입
-                      } else {
-                        return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
-                      }
-                    }
-                  }));
+                onTap: () {
+                  _kakaoLogin(context);
                 },
                 child: Container(
                   child: Column(children: <Widget>[
@@ -199,6 +108,7 @@ class StartPage extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
+
               /*
               InkWell(
                 onTap: (){
@@ -229,39 +139,99 @@ class StartPage extends StatelessWidget {
                 ),
               ),
               */
-              MaterialButton(
-                onPressed: () {
-                  //  로그인 페이지를 지우고 메인 화면으로 전환
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainScreen()),
-                      (route) => false);
-                  // return MaterialApp(home: MainScreen());
-                },
-                color: Color(0xff347af0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  side: BorderSide(
-                    color: Color(0xff347af0),
-                  ),
-                ),
-                child: Container(
-                  width: 240,
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: Text(
-                    '게시판 테스트 페이지 (삭제예정)',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _kakaoLogin(BuildContext context) async {
+    await checkKakao();
+
+    if (isKakaoLogin) {
+      // await signDel();
+      await NetworkSingleton().postSignin();
+      await NetworkSingleton().getUsers();
+    }
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      if (isKakaoLogin) {
+        // 카카오톡 - 아숲 연동 완료
+        if (NetworkSingleton().getIsUser()) {
+          return WelcomePage(); // 카카오톡 - 아숲 회원가입
+        } else {
+          return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
+        }
+      }
+    }));
+  }
+
+  Future<void> checkKakao() async {
+    if (await isKakaoTalkInstalled()) {
+      try {
+        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+        isKakaoLogin = true;
+        print('카카오톡으로 로그인 성공');
+        print('accessToken : ');
+        print(token.accessToken);
+        // g_accessToken = token.accessToken;
+        NetworkSingleton().setAccessToken(token.accessToken);
+        print('refreshToken : ');
+        print(token.refreshToken);
+        // g_refreshToken = token.refreshToken;
+        NetworkSingleton().setRefreshToken(token.refreshToken);
+
+        User user = await UserApi.instance.me();
+        // g_providerUserId = user.id.toString();
+        NetworkSingleton().setProviderUserId(user.id.toString());
+        print('providerUserId : ');
+        print(NetworkSingleton().getpProviderUserId());
+      } catch (error) {
+        print('카카오톡으로 로그인 실패 $error');
+        isKakaoLogin = false;
+        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+        try {
+          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+          isKakaoLogin = true;
+          print('카카오계정으로 로그인 성공');
+          print('accessToken : ');
+          print(token.accessToken);
+          // g_accessToken = token.accessToken;
+          NetworkSingleton().setAccessToken(token.accessToken);
+          print('refreshToken : ');
+          print(token.refreshToken);
+          NetworkSingleton().setRefreshToken(token.refreshToken);
+
+          User user = await UserApi.instance.me();
+          NetworkSingleton().setProviderUserId(user.id.toString());
+          print('providerUserId : ');
+          print(NetworkSingleton().getpProviderUserId());
+        } catch (error) {
+          print('카카오계정으로 로그인 실패 $error');
+          isKakaoLogin = false;
+        }
+      }
+    } else {
+      try {
+        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+        print('카카오계정으로 로그인 성공');
+        print('accessToken : ');
+        print(token.accessToken);
+        NetworkSingleton().setAccessToken(token.accessToken);
+        print('refreshToken : ');
+        print(token.refreshToken);
+        NetworkSingleton().setRefreshToken(token.refreshToken);
+
+        User user = await UserApi.instance.me();
+        NetworkSingleton().setProviderUserId(user.id.toString());
+        print('providerUserId : ');
+        print(NetworkSingleton().getpProviderUserId());
+        isKakaoLogin = true;
+      } catch (error) {
+        print('카카오계정으로 로그인 실패 $error');
+        isKakaoLogin = false;
+      }
+    }
   }
 }
