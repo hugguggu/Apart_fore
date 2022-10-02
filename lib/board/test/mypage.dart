@@ -8,6 +8,8 @@ class myPage extends StatelessWidget {
   String strNick = UserInfo().getNickName();
   String strAtp = UserInfo().getKaptName();
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     print('******* nickname ******* ' + strNick);
@@ -36,7 +38,11 @@ class myPage extends StatelessWidget {
               }),
         ],
       ),
-      body: SafeArea(
+      body: Scrollbar(
+        controller: _scrollController,
+        child: ListView(controller: _scrollController,
+          children: [
+          Expanded(
         child: Column(
           children: <Widget>[
             const SizedBox(
@@ -436,6 +442,7 @@ class myPage extends StatelessWidget {
             ),
           ],
         ),
+    ),],)
       ),
     );
   }
