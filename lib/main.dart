@@ -159,12 +159,38 @@ class StartPage extends StatelessWidget {
       if (isKakaoLogin) {
         // 카카오톡 - 아숲 연동 완료
         if (NetworkSingleton().getIsUser()) {
-          return WelcomePage(); // 카카오톡 - 아숲 회원가입
+          if (NetworkSingleton().getFirstLogin()) {
+            return WelcomePage(); // 웰컴페이지
+          } else {
+            return MainScreen();
+          }
         } else {
           return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
         }
       }
     }));
+  }
+
+  Future<void> logoutKakao() async {
+    if (await isKakaoTalkInstalled()) {
+      try {
+        UserIdResponse token = await UserApi.instance.logout();
+        isKakaoLogin = false;
+        print('카카오톡으로 로그아웃');
+      } catch (error) {
+        print('카카오톡으로 로그아웃 실패 $error');
+        isKakaoLogin = true;
+      }
+    } else {
+      try {
+        UserIdResponse token = await UserApi.instance.logout();
+        print('카카오계정으로 로그아웃');
+        isKakaoLogin = false;
+      } catch (error) {
+        print('카카오계정으로 로그아웃 실패 $error');
+        isKakaoLogin = true;
+      }
+    }
   }
 
   Future<void> checkKakao() async {
