@@ -71,6 +71,7 @@ class _ReadScreenState extends State<ReadScreen> {
                           ),
                         ],
                 ),
+<<<<<<< HEAD
                 body: ListView(
                   children: [
                     Column(
@@ -83,6 +84,47 @@ class _ReadScreenState extends State<ReadScreen> {
                             // mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
 
+=======
+              ],
+      ),
+      body: FutureBuilder(
+          future: _getArticleDetail(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return const Center(child: CircularProgressIndicator());
+              default:
+                return Column(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            PostItem()
+                                .getCategoryList()[_postDetail.category]
+                                .toString(),
+                            style: const TextStyle(
+                              fontSize: 24,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _postDetail.title,
+                              style: const TextStyle(
+                                fontSize: 32,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+>>>>>>> feature/Mypage_detail
                             children: [
                               Text(
                                 PostItem()

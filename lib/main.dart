@@ -174,6 +174,28 @@ class StartPage extends StatelessWidget {
     }
   }
 
+  Future<void> logoutKakao() async {
+    if (await isKakaoTalkInstalled()) {
+      try {
+        UserIdResponse token = await UserApi.instance.logout();
+        isKakaoLogin = false;
+        print('카카오톡으로 로그아웃');
+      } catch (error) {
+        print('카카오톡으로 로그아웃 실패 $error');
+        isKakaoLogin = true;
+      }
+    } else {
+      try {
+        UserIdResponse token = await UserApi.instance.logout();
+        print('카카오계정으로 로그아웃');
+        isKakaoLogin = false;
+      } catch (error) {
+        print('카카오계정으로 로그아웃 실패 $error');
+        isKakaoLogin = true;
+      }
+    }
+  }
+
   Future<void> checkKakao() async {
     if (await isKakaoTalkInstalled()) {
       try {
