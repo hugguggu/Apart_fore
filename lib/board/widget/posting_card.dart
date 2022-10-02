@@ -32,15 +32,36 @@ class postcard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 // 카테고리 부분
-                Padding(
+                Container(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                  child: Text(
-                    PostItem().getCategoryList()[post.category],
-                    style: const TextStyle(
-                      fontSize: 16,
+                  width: 100,
+                  height: 30,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    child: Container(
+                      color: Colors.blue,
+                      child: Text(
+                        PostItem().getCategoryList()[post.category],
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
-                  ),
+                  ), // This trailing comma makes auto-formatting nicer for build methods.
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                //   child: Text(
+                //     PostItem().getCategoryList()[post.category],
+                //     style: const TextStyle(
+                //       fontSize: 16,
+                //     ),
+                //   ),
+                // ),
                 // 제목 부분
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
