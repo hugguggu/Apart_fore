@@ -185,11 +185,16 @@ class NetworkSingleton extends HttpOverrides {
     //encode Map to JSON
     var body = json.encode(data);
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"}, body: body);
-    print("${response.headers}");
-    print("${response.statusCode}");
-    print("${response.body}");
+    http.Response response;
+    try {
+      response = await http.post(url,
+          headers: {"Content-Type": "application/json"}, body: body);
+      print("${response.headers}");
+      print("${response.statusCode}");
+      print("${response.body}");
+    } catch (e) {
+      print(e.error);
+    }
 
     String cookie = response.headers['set-cookie'];
     setCookie(cookie);
@@ -218,21 +223,23 @@ class NetworkSingleton extends HttpOverrides {
       '$_serverAddress/users',
     );
     // GET
-    var response = await http.get(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        "Cookie": _cookie,
-      },
-    );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    http.Response response;
+    try {
+      response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": _cookie,
+        },
+      );
+      print("${response.headers}");
+      print("${response.statusCode}");
+      print("${response.body}");
+    } catch (e) {
+      print(e.error);
+    }
 
     String responseBody = utf8.decode(response.bodyBytes);
-    // List<dynamic> list = jsonDecode(responseBody);
-    // dynamic list = jsonDecode(responseBody);
-    // print(list[0]['nickname']);
-
     Map<String, dynamic> json = jsonDecode(responseBody);
 
     print('Howdy, ${json['nickname']}!');
@@ -264,13 +271,17 @@ class NetworkSingleton extends HttpOverrides {
     //encode Map to JSON
     var body = json.encode(data);
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": _cookie},
-        body: body);
-    print("${response.headers}");
-    print("${response.statusCode}");
-    print("${response.body}");
-    return response;
+    http.Response response;
+    try {
+      response = await http.post(url,
+          headers: {"Content-Type": "application/json", "Cookie": _cookie},
+          body: body);
+      print("${response.headers}");
+      print("${response.statusCode}");
+      print("${response.body}");
+    } catch (e) {
+      print(e.error);
+    }
   }
 
   Future<List<Apart>> postSearchApart(String search) async {
@@ -283,13 +294,17 @@ class NetworkSingleton extends HttpOverrides {
     };
     //encode Map to JSON
     var body = json.encode(data);
-
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": _cookie},
-        body: body);
-    print("${response.headers}");
-    print("${response.statusCode}");
-    print("${response.body}");
+    http.Response response;
+    try {
+      response = await http.post(url,
+          headers: {"Content-Type": "application/json", "Cookie": _cookie},
+          body: body);
+      print("${response.headers}");
+      print("${response.statusCode}");
+      print("${response.body}");
+    } catch (e) {
+      print(e.error);
+    }
 
     return parseApart(response.body);
   }
@@ -314,9 +329,15 @@ class NetworkSingleton extends HttpOverrides {
     //encode Map to JSON
     var body = json.encode(data);
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json", "Cookie": _cookie},
-        body: body);
+    http.Response response;
+    try {
+      response = await http.post(url,
+          headers: {"Content-Type": "application/json", "Cookie": _cookie},
+          body: body);
+    } catch (e) {
+      print(e.error);
+    }
+
     return response;
   }
 
