@@ -70,10 +70,10 @@ class _ReadScreenState extends State<ReadScreen> {
               case ConnectionState.waiting:
                 return const Center(child: CircularProgressIndicator());
               default:
-                return CustomScrollView(
+                return Column(
                   // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  slivers: [
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
