@@ -70,10 +70,10 @@ class _ReadScreenState extends State<ReadScreen> {
               case ConnectionState.waiting:
                 return const Center(child: CircularProgressIndicator());
               default:
-                return Column(
+                return CustomScrollView(
                   // mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  slivers: [
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
@@ -163,6 +163,14 @@ class _ReadScreenState extends State<ReadScreen> {
                     // ReadPageBottomBar(
                     //   // postDetail: _postDetail,
                     //   postDetail: widget.post,
+                    // ),
+                    // Column(
+                    //   children: <Widget>[
+                    //     // 일반 이미지
+                    //     Image.network(
+                    //         'https://static.melius0.shop/files/3c7d478d04341664eafef1ed1792d88e'),
+                    //     // 애미메이션 GIF 이미지
+                    //   ],
                     // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -37,18 +37,20 @@ class postcard extends StatelessWidget {
                   width: 100,
                   height: 30,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20),
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)),
                     child: Container(
-                      color: Colors.blue,
+                      color: Color.fromRGBO(
+                          255, post.category * 50, post.category * 50, 30),
                       child: Text(
                         PostItem().getCategoryList()[post.category],
                         style: const TextStyle(
                           fontSize: 16,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ), // This trailing comma makes auto-formatting nicer for build methods.
