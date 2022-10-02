@@ -155,20 +155,23 @@ class StartPage extends StatelessWidget {
       await NetworkSingleton().getUsers();
     }
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      if (isKakaoLogin) {
-        // 카카오톡 - 아숲 연동 완료
-        if (NetworkSingleton().getIsUser()) {
-          if (NetworkSingleton().getFirstLogin()) {
-            return WelcomePage(); // 웰컴페이지
-          } else {
-            return MainScreen();
-          }
+    if (isKakaoLogin) {
+      if (NetworkSingleton().getIsUser()) {
+        if (NetworkSingleton().getFirstLogin()) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => WelcomePage()),
+              (route) => false);
         } else {
-          return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (route) => false);
         }
+      } else {
+        return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
       }
-    }));
+    }
   }
 
   Future<void> logoutKakao() async {
