@@ -15,6 +15,7 @@ class NetworkSingleton extends HttpOverrides {
   bool _isUser;
   bool _setName;
   bool _duplicateName;
+  bool _isFirst;
   String _aptName;
 
   @override
@@ -78,6 +79,10 @@ class NetworkSingleton extends HttpOverrides {
 
   bool getDuplicateName() {
     return _duplicateName;
+  }
+
+  bool getFirstLogin() {
+    return _isFirst;
   }
 
   String getAptName() {
@@ -196,6 +201,16 @@ class NetworkSingleton extends HttpOverrides {
       print(e.error);
     }
 
+    String responseBody = utf8.decode(response.bodyBytes);
+
+    Map<String, dynamic> resjson = jsonDecode(responseBody);
+
+    if (resjson['status'] == 100) {
+      _isFirst = false;
+    } else {
+      _isUser = true;
+    }
+
     String cookie = response.headers['set-cookie'];
     setCookie(cookie);
 
@@ -204,6 +219,32 @@ class NetworkSingleton extends HttpOverrides {
     NetworkSingleton().setProviderUserId(_providerUserId);
     NetworkSingleton().setCookie(cookie);
 
+    return response;
+  }
+
+  Future<http.Response> getSession() async {
+    var url = Uri.parse(
+      '$_serverAddress/auth/session',
+    );
+    http.Response response;
+    try {
+      response = await http.get(
+        url,
+        headers: {
+          "Cookie": _cookie,
+        },
+      );
+    } catch (e) {
+      // print(e.error);
+      return null;
+    }
+
+    print("***  Headers ****" + "${response.headers}");
+    print("***  statusCode ****" + "${response.statusCode}");
+    print("***  body ****" + "${response.body}");
+
+    String responseBody = utf8.decode(response.bodyBytes);
+    // Map<String, dynamic> data = json.decode(response.body);
     return response;
   }
 
@@ -286,7 +327,7 @@ class NetworkSingleton extends HttpOverrides {
 
   Future<List<Apart>> postSearchApart(String search) async {
     var url = Uri.parse(
-      '$_serverAddress/apts/get-list',
+      '$_serverAddress/apts/search',
     );
 
     Map data = {
@@ -359,7 +400,7 @@ class NetworkSingleton extends HttpOverrides {
     }
 
     String responseBody = utf8.decode(response.bodyBytes);
-    List<dynamic> list = jsonDecode(responseBody);
+//    List<dynamic> list = jsonDecode(responseBody);
 
     return _getPostingL(responseBody);
   }

@@ -105,7 +105,7 @@ class StartPage extends StatelessWidget {
                   ]),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
 
