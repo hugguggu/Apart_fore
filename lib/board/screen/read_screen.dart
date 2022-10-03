@@ -18,12 +18,18 @@ class ReadScreen extends StatefulWidget {
 
 class _ReadScreenState extends State<ReadScreen> {
   article_apt _postDetail;
-  StreamController<bool> _iLikeSteamCtrl = StreamController.broadcast();
+  final StreamController<bool> _iLikeSteamCtrl = StreamController.broadcast();
   // bool _iLike;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _iLikeSteamCtrl.close();
   }
 
   @override
@@ -36,6 +42,7 @@ class _ReadScreenState extends State<ReadScreen> {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
             default:
+              _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
               return Scaffold(
                 appBar: AppBar(
                   title: Text(UserInfo().getKaptName()),
@@ -152,10 +159,11 @@ class _ReadScreenState extends State<ReadScreen> {
                   children: [
                     StreamBuilder<Object>(
                         stream: _iLikeSteamCtrl.stream,
+                        initialData: _postDetail.iLike == null ? false : true,
                         builder: (context, snapshot) {
                           return MaterialButton(
                             onPressed: () async {
-                              _iLikeSteamCtrl.onPause;
+                              // _iLikeSteamCtrl.onPause;
                               if (snapshot.data == false) {
                                 await NetworkSingleton()
                                     .checkLike(_postDetail.id);
@@ -171,7 +179,7 @@ class _ReadScreenState extends State<ReadScreen> {
                                     (int.parse(_postDetail.likes) - 1)
                                         .toString();
                               }
-                              _iLikeSteamCtrl.onListen;
+                              // _iLikeSteamCtrl.onListen;
                               // Future.delayed(const Duration(milliseconds: 3000));
                               // setState(() {});
                             },
