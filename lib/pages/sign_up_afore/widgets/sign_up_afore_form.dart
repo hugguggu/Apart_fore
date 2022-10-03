@@ -26,6 +26,8 @@ void init() {
 class SignUpAforeForm extends StatelessWidget {
   bool usenick;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     String nickname;
@@ -85,6 +87,7 @@ class SignUpAforeForm extends StatelessWidget {
           ),
           child: Form(
             // autovalidate: state.showErrorMessages,
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -110,8 +113,17 @@ class SignUpAforeForm extends StatelessWidget {
                       autofocus: false,
                       autovalidateMode: AutovalidateMode.always,
                       validator: (value) {
+                        final RegExp _regExp =
+                            // RegExp(r'[\uac00-\ud7afa-zA-Z0-9]', unicode: true); // 영문 + 숫자 + 완성형 한글
+                            RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]',
+                                unicode: true); // 영문 + 숫자 + 한글 // 영문 + 숫자 + 한글
                         if (value.isEmpty) {
                           return '닉네임을 입력해주세요.';
+                        } else if (_regExp.allMatches(value).length !=
+                            value.length) {
+                          return "닉네임은 한글/영문/숫자 조합만 가능합니다.";
+                        } else if (value.length < 2 || value.length > 6) {
+                          return "닉네임을 2~6글자 사이로 입력해주세요.";
                         } else {
                           return null;
                         }
@@ -123,6 +135,7 @@ class SignUpAforeForm extends StatelessWidget {
                     ),
                     TextFormField(
                         controller: _aptText = TextEditingController(),
+                        maxLength: 20,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.add_business_rounded),
                           labelText: '주거 아파트',
@@ -130,24 +143,26 @@ class SignUpAforeForm extends StatelessWidget {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.search),
                             onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: _APTListviewPage(),
-                                      insetPadding: const EdgeInsets.fromLTRB(
-                                          0, 80, 0, 80),
-                                      actions: [
-                                        TextButton(
-                                          child: const Text('확인'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  });
+                              if (_formKey.currentState.validate()) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: _APTListviewPage(),
+                                        insetPadding: const EdgeInsets.fromLTRB(
+                                            0, 80, 0, 80),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('확인'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              }
                             },
                           ), //검색 아이콘 추가
                           contentPadding: EdgeInsets.only(
@@ -157,10 +172,18 @@ class SignUpAforeForm extends StatelessWidget {
                         autofocus: false,
                         autovalidateMode: AutovalidateMode.always,
                         validator: (value) {
+                          final RegExp _regExp = RegExp(
+                              r'[\uac00-\ud7afa-zA-Z0-9]',
+                              unicode: true); // 영문 + 숫자 + 완성형 한글
                           if (value.isEmpty) {
                             g_searchApt = null;
                             g_setApt = false;
                             return '아파트명을 입력해주세요.';
+                          } else if (_regExp.allMatches(value).length !=
+                              value.length) {
+                            return "아파트명은 한글/영문/숫자 조합으로 조회 가능합니다.";
+                          } else if (value.length < 2 || value.length > 10) {
+                            return '아파트명을 2~10글자 사이로 입력해주세요.';
                           } else {
                             g_searchApt = value;
                             return null;

@@ -169,7 +169,10 @@ class StartPage extends StatelessWidget {
               (route) => false);
         }
       } else {
-        return SignUpAforePage(); // 카카오톡 - 아숲 회원가입
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SignUpAforePage()),  // 카카오톡 - 아숲 회원가입
+                (route) => false);
       }
     }
   }
