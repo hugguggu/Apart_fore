@@ -5,7 +5,6 @@ import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
-import 'package:apart_forest/board/widget/read_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
@@ -71,7 +70,6 @@ class _ReadScreenState extends State<ReadScreen> {
                           ),
                         ],
                 ),
-<<<<<<< HEAD
                 body: ListView(
                   children: [
                     Column(
@@ -83,48 +81,6 @@ class _ReadScreenState extends State<ReadScreen> {
                           child: Column(
                             // mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-
-=======
-              ],
-      ),
-      body: FutureBuilder(
-          future: _getArticleDetail(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return const Center(child: CircularProgressIndicator());
-              default:
-                return Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            PostItem()
-                                .getCategoryList()[_postDetail.category]
-                                .toString(),
-                            style: const TextStyle(
-                              fontSize: 24,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _postDetail.title,
-                              style: const TextStyle(
-                                fontSize: 32,
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
->>>>>>> feature/Mypage_detail
                             children: [
                               Text(
                                 PostItem()
