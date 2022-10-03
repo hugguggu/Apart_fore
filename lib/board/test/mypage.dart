@@ -42,8 +42,7 @@ class myPage extends StatelessWidget {
           child: ListView(
             controller: _scrollController,
             children: [
-              Expanded(
-                child: Column(
+                Column(
                   children: <Widget>[
                     const SizedBox(
                       width: 20,
@@ -434,7 +433,6 @@ class myPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
             ],
           )),
     );
