@@ -259,6 +259,6 @@ class _ReadScreenState extends State<ReadScreen> {
   Future<void> _getArticleDetail() async {
     _postDetail = await NetworkSingleton().getArticleDetail(widget.post.id);
     // _postDetail = await NetworkSingleton().getArticleDetail();
-    _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
+    // _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
   }
 }
