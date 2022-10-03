@@ -10,6 +10,8 @@ class editinfo extends StatelessWidget {
 
   final ScrollController _scrollController = ScrollController();
 
+  Color errorClr = Colors.blueAccent;
+
   @override
   Widget build(BuildContext context) {
     print('******* nickname ******* ' + strNick);
@@ -51,40 +53,57 @@ class editinfo extends StatelessWidget {
                     width: 20,
                     height: 20,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
+                    alignment: Alignment.topLeft,
+                    child: Text("닉네임 (5회 남음)",
+                        style: TextStyle(fontSize: 15, color: Colors.grey)),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: TextFormField(
+                      initialValue: '${strNick}',
+                      autocorrect: false,
+                      autofocus: false,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) {
+                        final RegExp _regExp =
+                            // RegExp(r'[\uac00-\ud7afa-zA-Z0-9]', unicode: true); // 영문 + 숫자 + 완성형 한글
+                            RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]',
+                                unicode: true); // 영문 + 숫자 + 한글 // 영문 + 숫자 + 한글
+                        if (value.isEmpty) {
+                          errorClr = Colors.red;
+                          return '닉네임을 입력해주세요.';
+                        } else if (_regExp.allMatches(value).length !=
+                            value.length) {
+                          errorClr = Colors.red;
+                          return "닉네임은 한글/영문/숫자 조합만 가능합니다.";
+                        } else if (value.length < 2 || value.length > 6) {
+                          errorClr = Colors.red;
+                          return "닉네임을 2~6글자 사이로 입력해주세요.";
+                        } else {
+                          errorClr = Colors.blueAccent;
+                          return "사용 가능한 닉네임입니다.";
+                        }
+                      },
+                      onChanged: (value) => value,
+                      decoration: InputDecoration(
+                        errorStyle: TextStyle(color: errorClr),
+                        hintText: "닉네임을 입력해주세요.",
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(20.0),
                       ),
-                      Container(
-                        // color: Colors.grey,
-                        padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                        alignment: Alignment.centerLeft,
-                        width: 240,
-                        height: 50,
-                        child: Text(
-                          '${strNick}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const Text(
-                        '수정',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                      IconButton(
-                          icon: Icon(Icons.edit),
-                          color: Colors.redAccent,
-                          onPressed: () {}),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                    height: 30,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
+                    alignment: Alignment.topLeft,
+                    child: Text("아파트명 (3회 남음)",
+                        style: TextStyle(fontSize: 15, color: Colors.grey)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
