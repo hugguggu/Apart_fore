@@ -67,8 +67,9 @@ class postcard extends StatelessWidget {
                 // 제목 부분
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                  child: Flexible(
-                    // alignment: Alignment.centerLeft,
+                  child: Align(
+                    // child: Flexible(
+                    alignment: Alignment.centerLeft,
                     child: RichText(
                       text: TextSpan(
                           text: post.title,
@@ -85,8 +86,9 @@ class postcard extends StatelessWidget {
                 // 미리보기 부분
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-                  child: Flexible(
-                    // alignment: Alignment.centerLeft,
+                  child: Align(
+                    // child: Flexible(
+                    alignment: Alignment.centerLeft,
                     child: RichText(
                       // text: TextSpan(text: post.content),
                       text: TextSpan(
