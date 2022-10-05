@@ -1,7 +1,7 @@
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
-import 'package:apart_forest/board/screen/board_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class WriteScreen extends StatefulWidget {
   final int category_modify;
@@ -20,6 +20,9 @@ class _WriteScreenState extends State<WriteScreen> {
   int selectedDropdown = 0;
   final titleTextFieldController = TextEditingController();
   final contentTextFieldController = TextEditingController();
+
+  PickedFile _picker;
+
   @override
   Widget build(BuildContext context) {
     if (widget.category_modify != null &&
@@ -30,89 +33,98 @@ class _WriteScreenState extends State<WriteScreen> {
       contentTextFieldController.text = widget.content_modify;
     }
     return Scaffold(
-        appBar: AppBar(
-          // iconTheme: Icons.,
-          title: const Text('새 글쓰기'),
-          leading: IconButton(
+      appBar: AppBar(
+        // iconTheme: Icons.,
+        title: const Text('새 글쓰기'),
+        leading: IconButton(
+          onPressed: () {
+            if (selectedDropdown == 0 &&
+                titleTextFieldController.text.isEmpty &&
+                contentTextFieldController.text.isEmpty) {
+              Navigator.pop(context);
+            } else {
+              _showdBackDialog(context)
+                  .then((value) => (value) ? Navigator.pop(context) : null);
+            }
+          },
+          icon: const Icon(Icons.backspace),
+        ),
+        actions: <Widget>[
+          MaterialButton(
+            // textColor: Colors.white,
             onPressed: () {
-              if (selectedDropdown == 0 &&
-                  titleTextFieldController.text.isEmpty &&
-                  contentTextFieldController.text.isEmpty) {
-                Navigator.pop(context);
+              if (selectedDropdown == 0) {
+                _showdTextFieldDialog(context, 0);
+              } else if (titleTextFieldController.text.isEmpty) {
+                _showdTextFieldDialog(context, 1);
+              } else if (contentTextFieldController.text.isEmpty) {
+                _showdTextFieldDialog(context, 2);
               } else {
-                _showdBackDialog(context)
+                _showdSaveDialog(context)
                     .then((value) => (value) ? Navigator.pop(context) : null);
               }
             },
-            icon: const Icon(Icons.backspace),
+            child: const Text(
+              "저장",
+              style: TextStyle(fontSize: 16, color: Colors.redAccent),
+            ),
+            // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
           ),
-          actions: <Widget>[
-            MaterialButton(
-              // textColor: Colors.white,
-              onPressed: () {
-                if (selectedDropdown == 0) {
-                  _showdTextFieldDialog(context, 0);
-                } else if (titleTextFieldController.text.isEmpty) {
-                  _showdTextFieldDialog(context, 1);
-                } else if (contentTextFieldController.text.isEmpty) {
-                  _showdTextFieldDialog(context, 2);
-                } else {
-                  _showdSaveDialog(context)
-                      .then((value) => (value) ? Navigator.pop(context) : null);
-                }
-              },
-              child: const Text(
-                "저장",
-                style: TextStyle(fontSize: 16, color: Colors.redAccent),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              DropdownButton(
+                value: PostItem().getCategoryList()[selectedDropdown],
+                items: PostItem().getCategoryList().map((String item) {
+                  return DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+                onChanged: (dynamic value) {
+                  setState(() {
+                    // selectedDropdown = value;
+                    selectedDropdown =
+                        PostItem().getCategoryList().indexOf(value);
+                  });
+                },
               ),
-              // shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+            ],
+          ),
+          Container(
+            height: 1.0,
+            width: double.maxFinite,
+            color: Colors.blueAccent,
+          ),
+          TextField(
+            decoration: const InputDecoration(labelText: '제목을 입력하세요'),
+            controller: titleTextFieldController,
+            maxLines: 1,
+          ),
+          Expanded(
+            child: TextField(
+              controller: contentTextFieldController,
+              decoration: const InputDecoration(labelText: '내용을 입력하세요'),
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              expands: true, // <-- SEE HERE
             ),
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                DropdownButton(
-                  value: PostItem().getCategoryList()[selectedDropdown],
-                  items: PostItem().getCategoryList().map((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-                  onChanged: (dynamic value) {
-                    setState(() {
-                      // selectedDropdown = value;
-                      selectedDropdown =
-                          PostItem().getCategoryList().indexOf(value);
-                    });
-                  },
-                ),
-              ],
-            ),
-            Container(
-              height: 1.0,
-              width: double.maxFinite,
-              color: Colors.blueAccent,
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: '제목을 입력하세요'),
-              controller: titleTextFieldController,
-              maxLines: 1,
-            ),
-            Expanded(
-              child: TextField(
-                controller: contentTextFieldController,
-                decoration: const InputDecoration(labelText: '내용을 입력하세요'),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                expands: true, // <-- SEE HERE
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Add your onPressed code here!
+          _getImgFromGallery();
+        },
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.image),
+      ),
+    );
   }
 
   Future<dynamic> _showdSaveDialog(BuildContext context) {
@@ -193,5 +205,13 @@ class _WriteScreenState extends State<WriteScreen> {
         ],
       ),
     );
+  }
+
+  Future _getImgFromGallery() async {
+    var image =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _picker = image;
+    });
   }
 }
