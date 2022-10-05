@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:apart_forest/board/model/Apart_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
+import 'package:apart_forest/board/model/server_error_model.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +28,7 @@ class NetworkSingleton extends HttpOverrides {
 
   // final String _serverAddress = 'http://61.77.114.199:8680';
   final String _serverAddress = 'https://test.melius0.shop';
+
   // final String _serverAddress = 'http://test.melius0.shop:8680';
 
   static final NetworkSingleton _instance = NetworkSingleton._internal();
@@ -87,6 +89,10 @@ class NetworkSingleton extends HttpOverrides {
 
   String getAptName() {
     return _aptName;
+  }
+
+  String getImagAddress(String code) {
+    return '$_serverAddress/files/$code';
   }
 
   Future<http.Response> signOut() async {
@@ -430,8 +436,13 @@ class NetworkSingleton extends HttpOverrides {
       // print(e.error);
       return null;
     }
+
     // String responseBody = utf8.decode(response.bodyBytes);
     Map<String, dynamic> data = json.decode(response.body);
+    ServerErrorMsg msg = ServerErrorMsg.fromJson(data);
+    if (msg.statusCode == 403) {
+      return null;
+    }
     return article_apt.fromJson(data);
   }
 

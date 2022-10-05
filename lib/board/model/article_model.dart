@@ -74,6 +74,3 @@ class article_apt {
     );
   }
 }
-
-
-// "{"id":53,"aptKaptCode":"T00000001","userId":9,"nickname":"rafahel","category":1,"title":"ytryrtyrt","content":null,"views":55,"likes":"1","iLike":null,"createdAt":"2022-10-02T07:17:22.000Z","updatedAt":"2022-10-02T07:17:22.000Z","contents":[{"contentType":"TXT","content":"hello1"},{"contentType":"TXT","content":"hello2"}]}"

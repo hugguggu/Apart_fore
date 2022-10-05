@@ -5,6 +5,7 @@ import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
 import 'package:apart_forest/board/screen/write_screen.dart';
+import 'package:apart_forest/board/widget/read_img_carousel.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
@@ -41,8 +42,10 @@ class _ReadScreenState extends State<ReadScreen> {
             case ConnectionState.none:
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
+            case ConnectionState.waiting:
+              return null;
             default:
-              _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
+              // _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
               return Scaffold(
                 appBar: AppBar(
                   title: Text(UserInfo().getKaptName()),
@@ -89,6 +92,7 @@ class _ReadScreenState extends State<ReadScreen> {
                             // mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              //  카테고리 영역
                               Text(
                                 PostItem()
                                     .getCategoryList()[_postDetail.category]
@@ -97,6 +101,7 @@ class _ReadScreenState extends State<ReadScreen> {
                                   fontSize: 24,
                                 ),
                               ),
+                              //  타이틀 영역
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -106,6 +111,7 @@ class _ReadScreenState extends State<ReadScreen> {
                                   ),
                                 ),
                               ),
+                              // 글 정보 영역
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -134,6 +140,13 @@ class _ReadScreenState extends State<ReadScreen> {
                           width: double.maxFinite,
                           color: Colors.blue[100],
                         ),
+                        ReadScreenImageCarousel(),
+                        Container(
+                          height: 1.0,
+                          width: double.maxFinite,
+                          color: Colors.blue[100],
+                        ),
+                        // 본문 영역
                         TextField(
                           controller:
                               //  TextEditingController(text: widget.post.content),
