@@ -140,7 +140,9 @@ class _ReadScreenState extends State<ReadScreen> {
                           width: double.maxFinite,
                           color: Colors.blue[100],
                         ),
-                        ReadScreenImageCarousel(),
+                        if (_postDetail.contents != null &&
+                            _postDetail.contents.isNotEmpty)
+                          ReadScreenImageCarousel(),
                         Container(
                           height: 1.0,
                           width: double.maxFinite,
