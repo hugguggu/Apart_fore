@@ -1,22 +1,36 @@
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
-import 'package:apart_forest/board/test/mypage.dart';
-import 'package:apart_forest/main.dart';
 import 'package:flutter/material.dart';
 
-class editinfo extends StatelessWidget {
+class editinfo extends StatefulWidget {
+  @override
+  State<editinfo> createState() => _editinfoState();
+}
+
+class _editinfoState extends State<editinfo> {
   String strNick = UserInfo().getNickName();
   String strAtp = UserInfo().getKaptName();
-
-  final ScrollController _scrollController = ScrollController();
+  String srtEditNick;
 
   Color errorClr = Colors.blueAccent;
+  String errStr = '변경할 닉네임을 입력하세요';
+  final nickNameTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nickNameTextController.text = strNick;
+    nickNameTextController.addListener(_checkNickname);
+  }
+
+  @override
+  void dispose() {
+    nickNameTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('******* nickname ******* ' + strNick);
-    print('******* nickname ******* ' + strAtp);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -35,108 +49,103 @@ class editinfo extends StatelessWidget {
               style: TextButton.styleFrom(
                 primary: Colors.white,
               ),
-              label: Text("저장"),
-              onPressed: () {
-                _showdSaveDialog(context)
+              label: const Text("저장"),
+              onPressed: () async {
+                if(errorClr == Colors.red){
+                  return;
+                }
+                _showdSaveDialog(context, srtEditNick)
                     .then((value) => (value) ? Navigator.pop(context) : null);
               }),
         ],
       ),
       body: Scrollbar(
-          controller: _scrollController,
           child: ListView(
-            controller: _scrollController,
-            children: [
-              Column(
-                children: <Widget>[
+        children: [
+          Column(
+            children: <Widget>[
+              const SizedBox(
+                width: 20,
+                height: 20,
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
+                alignment: Alignment.topLeft,
+                child: Text("닉네임 (5회 남음)",
+                    style: TextStyle(fontSize: 15, color: Colors.grey)),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: TextFormField(
+                  controller: nickNameTextController,
+                  // initialValue: '${strNick}',
+                  autocorrect: false,
+                  autofocus: false,
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    srtEditNick = value;
+                    print(" srtEditNick = " + srtEditNick);
+                    return errStr;
+                  },
+                  // onChanged: (value) {
+                  //   print("닉네임은 한글/영문/숫자 조합만 가능합니다. onstate");
+                  //   _checkNickname();
+                  //   setState(() {});
+                  // },
+                  onSaved: (value) {
+                    print("닉네임은 한글/영문/숫자 조합만 가능합니다. onstate");
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    errorStyle: TextStyle(color: errorClr),
+                    hintText: "닉네임을 입력해주세요.",
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.all(20.0),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 30,
+                height: 30,
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
+                alignment: Alignment.topLeft,
+                child: Text("아파트명 (3회 남음)",
+                    style: TextStyle(fontSize: 15, color: Colors.grey)),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
                   const SizedBox(
                     width: 20,
                     height: 20,
                   ),
                   Container(
-                    margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
-                    alignment: Alignment.topLeft,
-                    child: Text("닉네임 (5회 남음)",
-                        style: TextStyle(fontSize: 15, color: Colors.grey)),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: TextFormField(
-                      initialValue: '${strNick}',
-                      autocorrect: false,
-                      autofocus: false,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (value) {
-                        final RegExp _regExp =
-                            // RegExp(r'[\uac00-\ud7afa-zA-Z0-9]', unicode: true); // 영문 + 숫자 + 완성형 한글
-                            RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]',
-                                unicode: true); // 영문 + 숫자 + 한글 // 영문 + 숫자 + 한글
-                        if (value.isEmpty) {
-                          errorClr = Colors.red;
-                          return '닉네임을 입력해주세요.';
-                        } else if (_regExp.allMatches(value).length !=
-                            value.length) {
-                          errorClr = Colors.red;
-                          return "닉네임은 한글/영문/숫자 조합만 가능합니다.";
-                        } else if (value.length < 2 || value.length > 6) {
-                          errorClr = Colors.red;
-                          return "닉네임을 2~6글자 사이로 입력해주세요.";
-                        } else {
-                          errorClr = Colors.blueAccent;
-                          return "사용 가능한 닉네임입니다.";
-                        }
-                      },
-                      onChanged: (value) => value,
-                      decoration: InputDecoration(
-                        errorStyle: TextStyle(color: errorClr),
-                        hintText: "닉네임을 입력해주세요.",
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(20.0),
+                    // color: Colors.yellow,
+                    padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    alignment: Alignment.centerLeft,
+                    width: 240,
+                    height: 50,
+                    child: Text(
+                      '#${strAtp}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 30,
-                    height: 30,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(20, 4, 10, 4),
-                    alignment: Alignment.topLeft,
-                    child: Text("아파트명 (3회 남음)",
-                        style: TextStyle(fontSize: 15, color: Colors.grey)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                      ),
-                      Container(
-                        // color: Colors.yellow,
-                        padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                        alignment: Alignment.centerLeft,
-                        width: 240,
-                        height: 50,
-                        child: Text(
-                          '#${strAtp}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
             ],
-          )),
+          ),
+        ],
+      )),
     );
   }
 
-  Future<dynamic> _showdSaveDialog(BuildContext context) {
-    return showDialog(
+  Future<dynamic> _showdSaveDialog(BuildContext context, String str) async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         content: const Text('입력한 정보로 변경하시겠습니까?'),
@@ -144,10 +153,14 @@ class editinfo extends StatelessWidget {
           ElevatedButton(
             child: const Text('확인'),
             onPressed: () {
-              // NetworkSingleton().EditInfo();
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return myPage();
-              }));
+              if (errorClr == Colors.blueAccent) {
+                NetworkSingleton().postSetNick(str);
+                Navigator.pop(context, true);
+                print("닉네임 변경 완료 : " + str);
+              } else {
+                Navigator.pop(context, false);
+                print("닉네임 변경 실패");
+              }
             },
           ),
           ElevatedButton(
@@ -159,5 +172,48 @@ class editinfo extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _checkNickname() {
+    // print("Second text field: ${nickNameTextController.text}");
+    String value = '${nickNameTextController.text}';
+    RegExp _regExp =
+        // RegExp(r'[\uac00-\ud7afa-zA-Z0-9]', unicode: true); // 영문 + 숫자 + 완성형 한글
+        RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]',
+            unicode: false); // 영문 + 숫자 + 한글 // 영문 + 숫자 + 한글
+
+    checkNickname(value);
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (value.isEmpty) {
+        errorClr = Colors.red;
+        errStr = '닉네임을 입력해주세요.';
+      } else if (_regExp.allMatches(value).length != value.length) {
+        errorClr = Colors.red;
+        print("닉네임은 한글/영문/숫자 조합만 가능합니다.");
+        errStr = "닉네임은 한글/영문/숫자 조합만 가능합니다.";
+      } else if (value.length < 2 || value.length > 6) {
+        errorClr = Colors.red;
+        errStr = "닉네임을 2~6글자 사이로 입력해주세요.";
+      } else if (NetworkSingleton().getDuplicateName() == true) {
+        errorClr = Colors.red;
+        errStr = "중복된 닉네임입니다.";
+      } else {
+        errorClr = Colors.blueAccent;
+        errStr = "사용 가능한 닉네임입니다.";
+      }
+      setState(() {});
+    });
+
+  }
+
+  Future<bool> checkNickname(String nickname) async {
+    await NetworkSingleton().postcheckNick(nickname);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (NetworkSingleton().getDuplicateName()) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 }

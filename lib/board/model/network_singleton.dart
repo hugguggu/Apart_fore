@@ -140,6 +140,7 @@ class NetworkSingleton extends HttpOverrides {
     print("${response.body}");
 
     if (response.body == "OK") {
+      UserInfo().setNickName(nickname);
       _setName = true;
     } else {
       _setName = false;

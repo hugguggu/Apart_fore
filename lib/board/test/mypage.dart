@@ -4,14 +4,30 @@ import 'package:apart_forest/board/test/editinfo.dart';
 import 'package:apart_forest/main.dart';
 import 'package:flutter/material.dart';
 
-class myPage extends StatelessWidget {
-  String strNick = UserInfo().getNickName();
-  String strAtp = UserInfo().getKaptName();
+class myPage extends StatefulWidget {
+  @override
+  State<myPage> createState() => myPageState();
+}
 
+class myPageState extends State<myPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String strNick = UserInfo().getNickName();
+    String strAtp = UserInfo().getKaptName();
+
     print('******* nickname ******* ' + strNick);
     print('******* nickname ******* ' + strAtp);
 
