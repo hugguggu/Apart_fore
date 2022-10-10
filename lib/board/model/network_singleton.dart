@@ -363,7 +363,7 @@ class NetworkSingleton extends HttpOverrides {
   }
 
   Future<http.Response> posting(
-      int category, String title, String content) async {
+      int category, String title, String contents, List<String> imgList) async {
     var url = Uri.parse(
       '$_serverAddress/article-apt',
     );
@@ -371,8 +371,10 @@ class NetworkSingleton extends HttpOverrides {
     Map data = {
       'category': category,
       'title': title,
-      'content': content,
+      // 'content': content,  // v0.1.0
+      'contents': contents,
     };
+
     //encode Map to JSON
     var body = json.encode(data);
 
@@ -386,6 +388,21 @@ class NetworkSingleton extends HttpOverrides {
     }
 
     return response;
+  }
+
+  Future<http.Response> posting2(
+      int category, String title, String contents, List<String> imgList) async {
+    var request = new http.MultipartRequest(
+        "POST", Uri.parse('$_serverAddress/article-apt'));
+
+    request.fields['category'] = category.toString();
+    request.fields['title'] = title;
+
+    for (var imageFile in imgList) {
+      request.files.add(await http.MultipartFile.fromPath('TXT', imageFile));
+    }
+
+    var response = await request.send();
   }
 
   Future<List<dynamic>> getPostingList(int itemNumPerPage, int page) async {

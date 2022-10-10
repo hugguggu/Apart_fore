@@ -140,6 +140,7 @@ class _ReadScreenState extends State<ReadScreen> {
                           width: double.maxFinite,
                           color: Colors.blue[100],
                         ),
+                        //  이미지 슬라이드 영역
                         if (_postDetail.contents != null &&
                             _postDetail.contents.isNotEmpty)
                           ReadScreenImageCarousel(),

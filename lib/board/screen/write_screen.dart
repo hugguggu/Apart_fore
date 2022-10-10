@@ -1,6 +1,8 @@
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
+import 'package:apart_forest/board/widget/write_img_carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect.dart';
 import 'package:image_picker/image_picker.dart';
 
 class WriteScreen extends StatefulWidget {
@@ -22,6 +24,7 @@ class _WriteScreenState extends State<WriteScreen> {
   final contentTextFieldController = TextEditingController();
 
   PickedFile _picker;
+  List<String> _imagePath = [];
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +117,21 @@ class _WriteScreenState extends State<WriteScreen> {
               expands: true, // <-- SEE HERE
             ),
           ),
+          Container(
+            height: 1.0,
+            width: double.maxFinite,
+            color: Colors.blue[100],
+          ),
+          //  이미지 슬라이드 영역
+          if (_picker != null)
+            WriteScreenImageCarousel(
+              listImagePath: _imagePath,
+            ),
+          Container(
+            height: 1.0,
+            width: double.maxFinite,
+            color: Colors.blue[100],
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -137,10 +155,13 @@ class _WriteScreenState extends State<WriteScreen> {
           ElevatedButton(
             child: const Text('확인'),
             onPressed: () {
-              NetworkSingleton().posting(
+              // var formData = FormData.fromMap({'image': await MultipartFile.fromFile(sendData)});
+              NetworkSingleton().posting2(
+                  // NetworkSingleton().posting(
                   selectedDropdown,
                   titleTextFieldController.text,
-                  contentTextFieldController.text);
+                  contentTextFieldController.text,
+                  _imagePath);
               PostItem().addLoadPostItem();
 
               Navigator.pop(context, true);
@@ -211,6 +232,7 @@ class _WriteScreenState extends State<WriteScreen> {
     var image =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     setState(() {
+      _imagePath.add(image.path);
       _picker = image;
     });
   }
