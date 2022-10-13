@@ -15,7 +15,7 @@ class contentModel {
   }
 }
 
-class article_apt {
+class articleModel {
   int id = 0;
   String aptKaptCode = '';
   int userId = 0;
@@ -30,7 +30,7 @@ class article_apt {
   String updatedAt = '';
   List<contentModel> contents = [];
 
-  article_apt({
+  articleModel({
     this.id,
     this.aptKaptCode,
     this.userId,
@@ -46,7 +46,7 @@ class article_apt {
     this.contents,
   });
 
-  factory article_apt.fromJson(Map<String, dynamic> json) {
+  factory articleModel.fromJson(Map<String, dynamic> json) {
     Iterable list = json['contents'];
 
     List<contentModel> contents;
@@ -57,7 +57,7 @@ class article_apt {
       print('else');
     }
 
-    return article_apt(
+    return articleModel(
       id: json['id'] as int,
       aptKaptCode: json['aptKaptCode'] as String,
       userId: json['userId'] as int,

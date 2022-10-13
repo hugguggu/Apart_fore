@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class WriteScreenImageCarousel extends StatefulWidget {
-  final List<String> listImagePath;
+  final List<PickedFile> listImagePath;
 
   const WriteScreenImageCarousel({Key key, this.listImagePath})
       : super(key: key);
@@ -42,7 +43,8 @@ class WritedScreenImageCarouselState extends State<WriteScreenImageCarousel> {
                     builder: (BuildContext context) {
                       return Container(
                         width: MediaQuery.of(context).size.width,
-                        child: Image.file(File(i)),
+                        // child: Image.file(File(i.path)),
+                        child: Image.file(File(i.path)),
                       );
                     },
                   );

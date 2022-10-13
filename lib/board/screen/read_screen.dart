@@ -9,7 +9,7 @@ import 'package:apart_forest/board/widget/read_img_carousel.dart';
 import 'package:flutter/material.dart';
 
 class ReadScreen extends StatefulWidget {
-  final article_apt post;
+  final articleModel post;
 
   const ReadScreen({Key key, this.post}) : super(key: key);
 
@@ -18,7 +18,7 @@ class ReadScreen extends StatefulWidget {
 }
 
 class _ReadScreenState extends State<ReadScreen> {
-  article_apt _postDetail;
+  articleModel _postDetail;
   final StreamController<bool> _iLikeSteamCtrl = StreamController.broadcast();
   // bool _iLike;
 
@@ -140,7 +140,7 @@ class _ReadScreenState extends State<ReadScreen> {
                           width: double.maxFinite,
                           color: Colors.blue[100],
                         ),
-                        //  이미지 슬라이드 영역
+                        //  이미지 슬라이드
                         if (_postDetail.contents != null &&
                             _postDetail.contents.isNotEmpty)
                           ReadScreenImageCarousel(),

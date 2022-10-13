@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
 import 'package:apart_forest/board/widget/write_img_carousel.dart';
@@ -24,7 +25,7 @@ class _WriteScreenState extends State<WriteScreen> {
   final contentTextFieldController = TextEditingController();
 
   PickedFile _picker;
-  List<String> _imagePath = [];
+  List<PickedFile> _imagePath = [];
 
   @override
   Widget build(BuildContext context) {
@@ -156,15 +157,40 @@ class _WriteScreenState extends State<WriteScreen> {
             child: const Text('확인'),
             onPressed: () {
               // var formData = FormData.fromMap({'image': await MultipartFile.fromFile(sendData)});
-              NetworkSingleton().posting2(
-                  // NetworkSingleton().posting(
-                  selectedDropdown,
-                  titleTextFieldController.text,
-                  contentTextFieldController.text,
-                  _imagePath);
+
+              Future<String> res = NetworkSingleton().imgUpload(_imagePath[0]);
+
+/*
+              articleModel send_format;
+              send_format.contents =
+              contentModel contents = contentModel();
+              contents.contentType = 'TXT';
+              contents.content = contentTextFieldController.text;
+              send_format.contents.add(contents);
+
+              _imagePath.forEach((element) {
+                contentModel contents = contentModel();
+                contents.contentType = 'IMG';
+                Future<String> res = NetworkSingleton().imgUpload(element);
+                res.then((val) {
+                  contents.content = val;
+                  send_format.contents.add(contents);
+                }).catchError((error) {
+                  print('error: $error');
+                });
+              });
+*/
+              // send_format.contents
+
+              // NetworkSingleton().posting2(
+              //     // NetworkSingleton().posting(
+              //     selectedDropdown,
+              //     titleTextFieldController.text,
+              //     contentTextFieldController.text,
+              //     null);
               PostItem().addLoadPostItem();
 
-              Navigator.pop(context, true);
+              // Navigator.pop(context, true);
             },
           ),
           ElevatedButton(
@@ -232,7 +258,7 @@ class _WriteScreenState extends State<WriteScreen> {
     var image =
         await ImagePicker.platform.pickImage(source: ImageSource.gallery);
     setState(() {
-      _imagePath.add(image.path);
+      _imagePath.add(image);
       _picker = image;
     });
   }

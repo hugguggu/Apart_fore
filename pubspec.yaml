@@ -54,6 +54,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   carousel_slider: ^4.1.1
   image_picker: ^0.8.5+3
+  mime_type: ^1.0.0
 
 
 dev_dependencies:

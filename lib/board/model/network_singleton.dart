@@ -4,9 +4,12 @@ import 'package:apart_forest/board/model/Apart_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/server_error_model.dart';
 import 'package:apart_forest/board/model/user_info_singleton.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime_type/mime_type.dart';
 
 class NetworkSingleton extends HttpOverrides {
   String _accessToken;
@@ -392,18 +395,81 @@ class NetworkSingleton extends HttpOverrides {
 
   Future<http.Response> posting2(
       int category, String title, String contents, List<String> imgList) async {
-    var request = new http.MultipartRequest(
-        "POST", Uri.parse('$_serverAddress/article-apt'));
+    var url = Uri.parse(
+      '$_serverAddress/article-apt',
+    );
 
-    request.fields['category'] = category.toString();
-    request.fields['title'] = title;
+    Map data = {
+      'category': category,
+      'title': title,
+      // 'content': content,  // v0.1.0
+      // 'contents': contents,
+    };
+    // print(formData);
 
-    for (var imageFile in imgList) {
-      request.files.add(await http.MultipartFile.fromPath('TXT', imageFile));
+    //encode Map to JSON
+    var body = json.encode(data);
+
+    http.Response response;
+    try {
+      response = await http.post(url,
+          headers: {"Content-Type": "application/json", "Cookie": _cookie},
+          body: body);
+    } catch (e) {
+      print(e.error);
     }
 
-    var response = await request.send();
+    return response;
   }
+
+  Future<String> imgUpload(PickedFile imgPath) async {
+    var url = Uri.parse(
+      'https://static.melius0.shop/files/upload',
+    );
+    String mimeType = mime(imgPath.path);
+    String mimee = mimeType.split('/')[0];
+    String type = mimeType.split('/')[1];
+
+    var request = http.MultipartRequest("POST", url);
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.headers['Cookie'] = _cookie;
+    request.files.add(await http.MultipartFile.fromPath('file', imgPath.path,
+        contentType: MediaType(mimee, type)));
+
+    var response = await request.send();
+    print("response: ${response}");
+
+    var respo = await http.Response.fromStream(response);
+    print("respo: ${respo}");
+
+    var statusCode = response.statusCode;
+    var responseHeaders = response.headers;
+    var responseBody = respo.body;
+
+    print("statusCode: ${statusCode}");
+    print("responseHeaders: ${responseHeaders}");
+    print("responseBody: ${responseBody}");
+
+    return responseBody;
+  }
+
+  void _upload() async {}
+
+  // var url = Uri.parse(
+  //   // '$_serverAddress/files/upload',
+  //   'https://static.melius0.shop/files/upload2',
+  // );
+
+  // var dio = Dio();
+  // var formData =
+  //     FormData.fromMap({'file': await MultipartFile.fromFile(imgPath.path)});
+
+  // dio.options.contentType = 'multipart/form-data';
+  // final response = await dio
+  //     .post('https://static.melius0.shop/files/upload2', data: formData)
+  //     .catchError((onError) => print(onError.toString()));
+
+  // print(response);
 
   Future<List<dynamic>> getPostingList(int itemNumPerPage, int page) async {
     var url = Uri.parse(
@@ -431,12 +497,12 @@ class NetworkSingleton extends HttpOverrides {
   List<dynamic> _getPostingL(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed
-        .map<article_apt>((json) => article_apt.fromJson(json))
+        .map<articleModel>((json) => articleModel.fromJson(json))
         .toList();
   }
 
   // Future<Map<String, dynamic>> getArticleDetail(int id) async {
-  Future<article_apt> getArticleDetail(int id) async {
+  Future<articleModel> getArticleDetail(int id) async {
     var url = Uri.parse(
       // '$_serverAddress/article-apt/$id',
       '$_serverAddress/article-apt/$id',
@@ -460,7 +526,7 @@ class NetworkSingleton extends HttpOverrides {
     if (msg.statusCode == 403) {
       return null;
     }
-    return article_apt.fromJson(data);
+    return articleModel.fromJson(data);
   }
 
   Future<http.Response> checkLike(int articleID) async {
