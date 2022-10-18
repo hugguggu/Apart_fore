@@ -11,6 +11,8 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime_type/mime_type.dart';
 
+import 'Upload_Contents_model.dart';
+
 class NetworkSingleton extends HttpOverrides {
   String _accessToken;
   String _refreshToken;
@@ -393,22 +395,21 @@ class NetworkSingleton extends HttpOverrides {
     return response;
   }
 
-  Future<http.Response> posting2(
-      int category, String title, String contents, List<String> imgList) async {
+  Future<http.Response> posting2(UploadContentsModel content) async {
     var url = Uri.parse(
       '$_serverAddress/article-apt',
     );
 
-    Map data = {
-      'category': category,
-      'title': title,
-      // 'content': content,  // v0.1.0
-      // 'contents': contents,
-    };
+    // Map data = {
+    //   'category': category,
+    //   'title': title,
+    //   // 'content': content,  // v0.1.0
+    //   // 'contents': contents,
+    // };
     // print(formData);
 
     //encode Map to JSON
-    var body = json.encode(data);
+    var body = json.encode(content);
 
     http.Response response;
     try {

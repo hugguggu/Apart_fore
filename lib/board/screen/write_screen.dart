@@ -1,3 +1,4 @@
+import 'package:apart_forest/board/model/Upload_Contents_model.dart';
 import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:apart_forest/board/model/post_item_singlton.dart';
@@ -158,29 +159,33 @@ class _WriteScreenState extends State<WriteScreen> {
             onPressed: () {
               // var formData = FormData.fromMap({'image': await MultipartFile.fromFile(sendData)});
 
-              Future<String> res = NetworkSingleton().imgUpload(_imagePath[0]);
+              // Future<String> res = NetworkSingleton().imgUpload(_imagePath[0]);
+              List<Content> contestList = [];
+              UploadContentsModel send_format = UploadContentsModel(
+                  category: selectedDropdown,
+                  title: titleTextFieldController.text,
+                  contents: contestList);
+              // send_format.contents = contestList;
 
-/*
-              articleModel send_format;
-              send_format.contents =
-              contentModel contents = contentModel();
-              contents.contentType = 'TXT';
-              contents.content = contentTextFieldController.text;
+              Content contents = Content(
+                  contentType: 'TXT', content: contentTextFieldController.text);
               send_format.contents.add(contents);
 
               _imagePath.forEach((element) {
-                contentModel contents = contentModel();
-                contents.contentType = 'IMG';
                 Future<String> res = NetworkSingleton().imgUpload(element);
                 res.then((val) {
-                  contents.content = val;
+                  Content contents = Content(
+                      contentType: 'IMG',
+                      content: 'd64bb1e190ea51ef129d6bcb366fb082');
                   send_format.contents.add(contents);
+                  print(send_format.toJson() as Map);
+                  NetworkSingleton().posting2(send_format);
+                  // PostItem().addLoadPostItem();
+                  // Navigator.pop(context, true);
                 }).catchError((error) {
                   print('error: $error');
                 });
               });
-*/
-              // send_format.contents
 
               // NetworkSingleton().posting2(
               //     // NetworkSingleton().posting(
@@ -188,9 +193,6 @@ class _WriteScreenState extends State<WriteScreen> {
               //     titleTextFieldController.text,
               //     contentTextFieldController.text,
               //     null);
-              PostItem().addLoadPostItem();
-
-              // Navigator.pop(context, true);
             },
           ),
           ElevatedButton(
