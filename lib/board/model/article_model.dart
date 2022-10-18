@@ -1,35 +1,15 @@
-class contentModel {
-  // "contentType":"TXT","content":"hello2"
-  String contentType;
-  String content;
+// To parse this JSON data, do
+//
+//     final articleModel = articleModelFromJson(jsonString);
 
-  contentModel({
-    this.contentType,
-    this.content,
-  });
-  factory contentModel.fromJson(Map<String, dynamic> json) {
-    return contentModel(
-      contentType: json['contentType'] as String,
-      content: json['content'] as String,
-    );
-  }
-}
+import 'dart:convert';
+
+articleModel articleModelFromJson(String str) =>
+    articleModel.fromJson(json.decode(str));
+
+String articleModelToJson(articleModel data) => json.encode(data.toJson());
 
 class articleModel {
-  int id = 0;
-  String aptKaptCode = '';
-  int userId = 0;
-  String nickname = '';
-  int category = 0;
-  String title = '';
-  String content = '';
-  int views = 0;
-  String likes = '0';
-  String iLike = null;
-  String createdAt = '';
-  String updatedAt = '';
-  List<contentModel> contents = [];
-
   articleModel({
     this.id,
     this.aptKaptCode,
@@ -46,31 +26,70 @@ class articleModel {
     this.contents,
   });
 
-  factory articleModel.fromJson(Map<String, dynamic> json) {
-    Iterable list = json['contents'];
+  int id;
+  String aptKaptCode;
+  int userId;
+  String nickname;
+  int category;
+  String title;
+  dynamic content;
+  int views;
+  String likes;
+  dynamic iLike;
+  DateTime createdAt;
+  DateTime updatedAt;
+  List<Content> contents;
 
-    List<contentModel> contents;
-    if (list.isNotEmpty) {
-      contents =
-          list.map<contentModel>((i) => contentModel.fromJson(i)).toList();
-    } else {
-      print('else');
-    }
+  factory articleModel.fromJson(Map<String, dynamic> json) => articleModel(
+        id: json["id"],
+        aptKaptCode: json["aptKaptCode"],
+        userId: json["userId"],
+        nickname: json["nickname"],
+        category: json["category"],
+        title: json["title"],
+        content: json["content"],
+        views: json["views"],
+        likes: json["likes"],
+        iLike: json["iLike"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        contents: List<Content>.from(
+            json["contents"].map((x) => Content.fromJson(x))),
+      );
 
-    return articleModel(
-      id: json['id'] as int,
-      aptKaptCode: json['aptKaptCode'] as String,
-      userId: json['userId'] as int,
-      nickname: json['nickname'] as String,
-      category: json['category'] as int,
-      title: json['title'] as String,
-      content: json['content'] as String,
-      views: json['views'] as int,
-      likes: json['likes'] as String,
-      iLike: json['iLike'] as String,
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
-      contents: contents,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "aptKaptCode": aptKaptCode,
+        "userId": userId,
+        "nickname": nickname,
+        "category": category,
+        "title": title,
+        "content": content,
+        "views": views,
+        "likes": likes,
+        "iLike": iLike,
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
+        "contents": List<dynamic>.from(contents.map((x) => x.toJson())),
+      };
+}
+
+class Content {
+  Content({
+    this.contentType,
+    this.content,
+  });
+
+  String contentType;
+  String content;
+
+  factory Content.fromJson(Map<String, dynamic> json) => Content(
+        contentType: json["contentType"],
+        content: json["content"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "contentType": contentType,
+        "content": content,
+      };
 }

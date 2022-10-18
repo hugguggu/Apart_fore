@@ -1,11 +1,12 @@
+import 'package:apart_forest/board/model/article_model.dart';
 import 'package:apart_forest/board/model/network_singleton.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ReadScreenImageCarousel extends StatefulWidget {
-  // const ReadScreenImageCarousel({super.key});
-
-  List<String> testList = ['NEWS 1', 'NEWS 2', 'NEWS 3', 'NEWS 4'];
+  final List<Content> contentList;
+  const ReadScreenImageCarousel({Key key, this.contentList}) : super(key: key);
+  // final articleModel post;
 
   @override
   State<ReadScreenImageCarousel> createState() =>
@@ -15,6 +16,17 @@ class ReadScreenImageCarousel extends StatefulWidget {
 class _ReadScreenImageCarouselState extends State<ReadScreenImageCarousel> {
   int _currentPage = 0;
   CarouselController carouselController = CarouselController();
+  List<Content> imgList = [];
+  @override
+  void initState() {
+    super.initState();
+    widget.contentList.forEach((element) {
+      if (element.contentType == "IMG") {
+        imgList.add(element);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,46 +45,51 @@ class _ReadScreenImageCarouselState extends State<ReadScreenImageCarousel> {
                     _currentPage = index;
                   });
                 }),
-                items: widget.testList.map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.network(NetworkSingleton().getImagAddress(
-                            '3c7d478d04341664eafef1ed1792d88e')),
-                      );
-                    },
-                  );
+                items: imgList.map((i) {
+                  if (i.contentType == "IMG") {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.network(NetworkSingleton()
+                              .getImagAddress(imgList[_currentPage].content)),
+                        );
+                      },
+                    );
+                  }
                 }).toList(),
               ),
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                onPressed: () {
-                  // Use the controller to change the current page
-                  carouselController.previousPage();
-                },
-                icon: const Icon(Icons.arrow_back),
+            if (imgList.length > 1)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () {
+                    // Use the controller to change the current page
+                    carouselController.previousPage();
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                onPressed: () {
-                  // Use the controller to change the current page
-                  carouselController.nextPage();
-                },
-                icon: const Icon(Icons.arrow_forward),
+            if (imgList.length > 1)
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () {
+                    // Use the controller to change the current page
+                    carouselController.nextPage();
+                  },
+                  icon: const Icon(Icons.arrow_forward),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: makeIndicator(widget.testList, _currentPage),
+            if (imgList.length > 1)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: makeIndicator(imgList, _currentPage),
+                ),
               ),
-            ),
           ],
         ),
       ),

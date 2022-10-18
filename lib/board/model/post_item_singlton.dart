@@ -97,8 +97,9 @@ class PostItem {
     return res;
   }
 
-  String getTimeText(String time) {
-    Duration diffDate = DateTime.parse(time).difference(DateTime.now());
+  String getTimeText(DateTime time) {
+    // Duration diffDate = DateTime.parse(time).difference(DateTime.now());
+    Duration diffDate = time.difference(DateTime.now());
     diffDate = diffDate * -1;
     if (diffDate.inDays > 0) {
       return '${diffDate.inDays} 일전';

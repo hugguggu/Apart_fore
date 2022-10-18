@@ -21,6 +21,8 @@ class _ReadScreenState extends State<ReadScreen> {
   articleModel _postDetail;
   final StreamController<bool> _iLikeSteamCtrl = StreamController.broadcast();
   // bool _iLike;
+  List<Content> _textContentList = [];
+  List<Content> _imgContentList = [];
 
   @override
   void initState() {
@@ -141,9 +143,9 @@ class _ReadScreenState extends State<ReadScreen> {
                           color: Colors.blue[100],
                         ),
                         //  이미지 슬라이드
-                        if (_postDetail.contents != null &&
-                            _postDetail.contents.isNotEmpty)
-                          ReadScreenImageCarousel(),
+                        if (_imgContentList != null &&
+                            _imgContentList.isNotEmpty)
+                          ReadScreenImageCarousel(contentList: _imgContentList),
                         Container(
                           height: 1.0,
                           width: double.maxFinite,
@@ -153,7 +155,8 @@ class _ReadScreenState extends State<ReadScreen> {
                         TextField(
                           controller:
                               //  TextEditingController(text: widget.post.content),
-                              TextEditingController(text: _postDetail.content),
+                              TextEditingController(
+                                  text: _textContentList[0].content),
                           // decoration: const InputDecoration(labelText: 'Message'),
                           // controller: TextEditingController().text = 'dsfsd',
                           maxLines: null,
@@ -274,6 +277,14 @@ class _ReadScreenState extends State<ReadScreen> {
 
   Future<void> _getArticleDetail() async {
     _postDetail = await NetworkSingleton().getArticleDetail(widget.post.id);
+    _postDetail.contents.forEach((element) {
+      if (element.contentType == "TXT") {
+        _textContentList.add(element);
+      } else if (element.contentType == 'IMG') {
+        _imgContentList.add(element);
+      }
+    });
+
     // _postDetail = await NetworkSingleton().getArticleDetail();
     // _iLikeSteamCtrl.add(_postDetail.iLike == null ? false : true);
   }

@@ -171,17 +171,17 @@ class _WriteScreenState extends State<WriteScreen> {
                   contentType: 'TXT', content: contentTextFieldController.text);
               send_format.contents.add(contents);
 
+              if (_imagePath.isEmpty) {
+                NetworkSingleton().posting2(send_format);
+                PostItem().addLoadPostItem();
+                Navigator.pop(context, true);
+              }
               _imagePath.forEach((element) {
                 Future<String> res = NetworkSingleton().imgUpload(element);
                 res.then((val) {
-                  Content contents = Content(
-                      contentType: 'IMG',
-                      content: 'd64bb1e190ea51ef129d6bcb366fb082');
+                  Content contents = Content(contentType: 'IMG', content: val);
                   send_format.contents.add(contents);
                   print(send_format.toJson() as Map);
-                  NetworkSingleton().posting2(send_format);
-                  // PostItem().addLoadPostItem();
-                  // Navigator.pop(context, true);
                 }).catchError((error) {
                   print('error: $error');
                 });

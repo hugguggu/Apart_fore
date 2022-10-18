@@ -92,7 +92,7 @@ class postcard extends StatelessWidget {
                     child: RichText(
                       // text: TextSpan(text: post.content),
                       text: TextSpan(
-                          text: post.content,
+                          text: post.contents[0].content,
                           style: const TextStyle(
                             color: Colors.black87,
                             // height: 1.4,
